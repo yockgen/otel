@@ -102,3 +102,28 @@ root@node1:/data/otel/config/telegraf# ./run.sh
 2023-02-10T07:09:09Z D! [outputs.opentelemetry] Buffer fullness: 0 / 10000 metrics
 2023-02-10T07:09:09Z D! [outputs.file] Buffer fullness: 0 / 10000 metrics
 ```
+
+## Verification
+After both processes running for more than 20 seconds, user could started to validate if the telemetry data reached OTELCOL agent.
+
+1. Telegraf process has exported two output files:
+   * To local node - /data/temp/yockgen.data
+   * To OTELCOL - /data/temp/otel_db.json
+
+2. Trying to copy some unique value from yockgen.data, for example:
+```
+root@node1:/data/temp# tail yockgen.data
+net,host=192.168.1.107,interface=cali407441e45f5 err_in=0i,err_out=0i,drop_in=1i,drop_out=0i,bytes_sent=3592388i,bytes_recv=3569786i,packets_sent=34704i,packets_recv=33906i 1676012940000000000
+```
+
+3. Search the unique value from step 2 in otel_db.json to verify data has been successfully reached OTELCOL agent
+```
+root@node1:/data/temp# grep 'cali407441e45f5' ./otel_db.json
+....
+ngValue":"cali1fb9a0419b2"}}],"timeUnixNano":"1676012940000000000","asInt":"0"},{"attributes":[{"key":"host","value":{"stringValue":"192.168.1.107"}},{"key":"interface","value":{"stringValue":"cali407441e45f5"}}]
+.....
+```
+
+## Next Steps
+TBD
+
