@@ -42,6 +42,9 @@ cp /{repo}/otel/config/telegraf/telegraf.conf /etc/telegraf/telegraf.conf
 5. Modify Telegraf config to correct OTELCOL hosted machine IP address and keep the port number as 4317, snippet as below 
 
 ```
+[agent]
+...
+ hostname = "192.168.1.107"
 ...
 [[outputs.opentelemetry]]
   service_address  = "192.168.1.107:4317"
