@@ -1,15 +1,15 @@
 {
 	"Name": "Poll",
 	"SpanContext": {
-		"TraceID": "0e26bdf218e1b6583b890c64a00e6fef",
-		"SpanID": "c5019b43e967c6e6",
+		"TraceID": "5fa192063038633b47eb84716449e600",
+		"SpanID": "0e2cf270a9c213af",
 		"TraceFlags": "01",
 		"TraceState": "",
 		"Remote": false
 	},
 	"Parent": {
-		"TraceID": "0e26bdf218e1b6583b890c64a00e6fef",
-		"SpanID": "333fb49a07f1aae3",
+		"TraceID": "5fa192063038633b47eb84716449e600",
+		"SpanID": "bc52bfd78b9b9598",
 		"TraceFlags": "01",
 		"TraceState": "",
 		"Remote": false
@@ -22,7 +22,7 @@
 			"Key": "request.n",
 			"Value": {
 				"Type": "STRING",
-				"Value": "34"
+				"Value": "12"
 			}
 		}
 	],
@@ -89,15 +89,15 @@
 {
 	"Name": "Factoria",
 	"SpanContext": {
-		"TraceID": "0e26bdf218e1b6583b890c64a00e6fef",
-		"SpanID": "ec1ffb94c48cb23e",
+		"TraceID": "5fa192063038633b47eb84716449e600",
+		"SpanID": "56163927a826449f",
 		"TraceFlags": "01",
 		"TraceState": "",
 		"Remote": false
 	},
 	"Parent": {
-		"TraceID": "0e26bdf218e1b6583b890c64a00e6fef",
-		"SpanID": "1e815e26c940334d",
+		"TraceID": "5fa192063038633b47eb84716449e600",
+		"SpanID": "7d90b75912bd99a7",
 		"TraceFlags": "01",
 		"TraceState": "",
 		"Remote": false
@@ -169,15 +169,15 @@
 {
 	"Name": "Write",
 	"SpanContext": {
-		"TraceID": "0e26bdf218e1b6583b890c64a00e6fef",
-		"SpanID": "1e815e26c940334d",
+		"TraceID": "5fa192063038633b47eb84716449e600",
+		"SpanID": "7d90b75912bd99a7",
 		"TraceFlags": "01",
 		"TraceState": "",
 		"Remote": false
 	},
 	"Parent": {
-		"TraceID": "0e26bdf218e1b6583b890c64a00e6fef",
-		"SpanID": "333fb49a07f1aae3",
+		"TraceID": "5fa192063038633b47eb84716449e600",
+		"SpanID": "bc52bfd78b9b9598",
 		"TraceFlags": "01",
 		"TraceState": "",
 		"Remote": false
@@ -249,8 +249,336 @@
 {
 	"Name": "MyAppRun",
 	"SpanContext": {
-		"TraceID": "0e26bdf218e1b6583b890c64a00e6fef",
-		"SpanID": "333fb49a07f1aae3",
+		"TraceID": "5fa192063038633b47eb84716449e600",
+		"SpanID": "bc52bfd78b9b9598",
+		"TraceFlags": "01",
+		"TraceState": "",
+		"Remote": false
+	},
+	"Parent": {
+		"TraceID": "00000000000000000000000000000000",
+		"SpanID": "0000000000000000",
+		"TraceFlags": "00",
+		"TraceState": "",
+		"Remote": false
+	},
+	"SpanKind": 1,
+	"StartTime": "0001-01-01T00:00:00Z",
+	"EndTime": "0001-01-01T00:00:00Z",
+	"Attributes": null,
+	"Events": null,
+	"Links": null,
+	"Status": {
+		"Code": "Unset",
+		"Description": ""
+	},
+	"DroppedAttributes": 0,
+	"DroppedEvents": 0,
+	"DroppedLinks": 0,
+	"ChildSpanCount": 2,
+	"Resource": [
+		{
+			"Key": "environment",
+			"Value": {
+				"Type": "STRING",
+				"Value": "demo"
+			}
+		},
+		{
+			"Key": "service.name",
+			"Value": {
+				"Type": "STRING",
+				"Value": "fib"
+			}
+		},
+		{
+			"Key": "service.version",
+			"Value": {
+				"Type": "STRING",
+				"Value": "v0.1.0"
+			}
+		},
+		{
+			"Key": "telemetry.sdk.language",
+			"Value": {
+				"Type": "STRING",
+				"Value": "go"
+			}
+		},
+		{
+			"Key": "telemetry.sdk.name",
+			"Value": {
+				"Type": "STRING",
+				"Value": "opentelemetry"
+			}
+		},
+		{
+			"Key": "telemetry.sdk.version",
+			"Value": {
+				"Type": "STRING",
+				"Value": "1.12.0"
+			}
+		}
+	],
+	"InstrumentationLibrary": {
+		"Name": "yockgen",
+		"Version": "",
+		"SchemaURL": ""
+	}
+}
+{
+	"Name": "Poll",
+	"SpanContext": {
+		"TraceID": "8489f10c7543da639f9bb5726ba21673",
+		"SpanID": "5fca745760c03616",
+		"TraceFlags": "01",
+		"TraceState": "",
+		"Remote": false
+	},
+	"Parent": {
+		"TraceID": "8489f10c7543da639f9bb5726ba21673",
+		"SpanID": "b200f444577415e6",
+		"TraceFlags": "01",
+		"TraceState": "",
+		"Remote": false
+	},
+	"SpanKind": 1,
+	"StartTime": "0001-01-01T00:00:00Z",
+	"EndTime": "0001-01-01T00:00:00Z",
+	"Attributes": [
+		{
+			"Key": "request.n",
+			"Value": {
+				"Type": "STRING",
+				"Value": "23"
+			}
+		}
+	],
+	"Events": null,
+	"Links": null,
+	"Status": {
+		"Code": "Unset",
+		"Description": ""
+	},
+	"DroppedAttributes": 0,
+	"DroppedEvents": 0,
+	"DroppedLinks": 0,
+	"ChildSpanCount": 0,
+	"Resource": [
+		{
+			"Key": "environment",
+			"Value": {
+				"Type": "STRING",
+				"Value": "demo"
+			}
+		},
+		{
+			"Key": "service.name",
+			"Value": {
+				"Type": "STRING",
+				"Value": "fib"
+			}
+		},
+		{
+			"Key": "service.version",
+			"Value": {
+				"Type": "STRING",
+				"Value": "v0.1.0"
+			}
+		},
+		{
+			"Key": "telemetry.sdk.language",
+			"Value": {
+				"Type": "STRING",
+				"Value": "go"
+			}
+		},
+		{
+			"Key": "telemetry.sdk.name",
+			"Value": {
+				"Type": "STRING",
+				"Value": "opentelemetry"
+			}
+		},
+		{
+			"Key": "telemetry.sdk.version",
+			"Value": {
+				"Type": "STRING",
+				"Value": "1.12.0"
+			}
+		}
+	],
+	"InstrumentationLibrary": {
+		"Name": "yockgen",
+		"Version": "",
+		"SchemaURL": ""
+	}
+}
+{
+	"Name": "Factoria",
+	"SpanContext": {
+		"TraceID": "8489f10c7543da639f9bb5726ba21673",
+		"SpanID": "ef62d4232632bb34",
+		"TraceFlags": "01",
+		"TraceState": "",
+		"Remote": false
+	},
+	"Parent": {
+		"TraceID": "8489f10c7543da639f9bb5726ba21673",
+		"SpanID": "5d9be83082a25a6e",
+		"TraceFlags": "01",
+		"TraceState": "",
+		"Remote": false
+	},
+	"SpanKind": 1,
+	"StartTime": "0001-01-01T00:00:00Z",
+	"EndTime": "0001-01-01T00:00:00Z",
+	"Attributes": null,
+	"Events": null,
+	"Links": null,
+	"Status": {
+		"Code": "Unset",
+		"Description": ""
+	},
+	"DroppedAttributes": 0,
+	"DroppedEvents": 0,
+	"DroppedLinks": 0,
+	"ChildSpanCount": 0,
+	"Resource": [
+		{
+			"Key": "environment",
+			"Value": {
+				"Type": "STRING",
+				"Value": "demo"
+			}
+		},
+		{
+			"Key": "service.name",
+			"Value": {
+				"Type": "STRING",
+				"Value": "fib"
+			}
+		},
+		{
+			"Key": "service.version",
+			"Value": {
+				"Type": "STRING",
+				"Value": "v0.1.0"
+			}
+		},
+		{
+			"Key": "telemetry.sdk.language",
+			"Value": {
+				"Type": "STRING",
+				"Value": "go"
+			}
+		},
+		{
+			"Key": "telemetry.sdk.name",
+			"Value": {
+				"Type": "STRING",
+				"Value": "opentelemetry"
+			}
+		},
+		{
+			"Key": "telemetry.sdk.version",
+			"Value": {
+				"Type": "STRING",
+				"Value": "1.12.0"
+			}
+		}
+	],
+	"InstrumentationLibrary": {
+		"Name": "yockgen",
+		"Version": "",
+		"SchemaURL": ""
+	}
+}
+{
+	"Name": "Write",
+	"SpanContext": {
+		"TraceID": "8489f10c7543da639f9bb5726ba21673",
+		"SpanID": "5d9be83082a25a6e",
+		"TraceFlags": "01",
+		"TraceState": "",
+		"Remote": false
+	},
+	"Parent": {
+		"TraceID": "8489f10c7543da639f9bb5726ba21673",
+		"SpanID": "b200f444577415e6",
+		"TraceFlags": "01",
+		"TraceState": "",
+		"Remote": false
+	},
+	"SpanKind": 1,
+	"StartTime": "0001-01-01T00:00:00Z",
+	"EndTime": "0001-01-01T00:00:00Z",
+	"Attributes": null,
+	"Events": null,
+	"Links": null,
+	"Status": {
+		"Code": "Unset",
+		"Description": ""
+	},
+	"DroppedAttributes": 0,
+	"DroppedEvents": 0,
+	"DroppedLinks": 0,
+	"ChildSpanCount": 1,
+	"Resource": [
+		{
+			"Key": "environment",
+			"Value": {
+				"Type": "STRING",
+				"Value": "demo"
+			}
+		},
+		{
+			"Key": "service.name",
+			"Value": {
+				"Type": "STRING",
+				"Value": "fib"
+			}
+		},
+		{
+			"Key": "service.version",
+			"Value": {
+				"Type": "STRING",
+				"Value": "v0.1.0"
+			}
+		},
+		{
+			"Key": "telemetry.sdk.language",
+			"Value": {
+				"Type": "STRING",
+				"Value": "go"
+			}
+		},
+		{
+			"Key": "telemetry.sdk.name",
+			"Value": {
+				"Type": "STRING",
+				"Value": "opentelemetry"
+			}
+		},
+		{
+			"Key": "telemetry.sdk.version",
+			"Value": {
+				"Type": "STRING",
+				"Value": "1.12.0"
+			}
+		}
+	],
+	"InstrumentationLibrary": {
+		"Name": "yockgen",
+		"Version": "",
+		"SchemaURL": ""
+	}
+}
+{
+	"Name": "MyAppRun",
+	"SpanContext": {
+		"TraceID": "8489f10c7543da639f9bb5726ba21673",
+		"SpanID": "b200f444577415e6",
 		"TraceFlags": "01",
 		"TraceState": "",
 		"Remote": false
