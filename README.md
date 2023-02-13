@@ -127,6 +127,18 @@ ngValue":"cali1fb9a0419b2"}}],"timeUnixNano":"1676012940000000000","asInt":"0"},
 .....
 ```
 
-## Next Steps
-TBD
+## Optional: Data Exporting to InfluxDB 
+
+```
+exporters:
+  ...
+  influxdb:
+    endpoint: http://192.168.1.107:8086
+    timeout: 500ms
+    org: test
+    bucket: test_bucket
+    token: {InfluxDB token here}
+    metrics_schema: telegraf-prometheus-v1
+
+```
 
