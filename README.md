@@ -127,7 +127,9 @@ ngValue":"cali1fb9a0419b2"}}],"timeUnixNano":"1676012940000000000","asInt":"0"},
 .....
 ```
 
-## Optional: Data Exporting to InfluxDB 
+## Optional: 
+
+1. Exporting to InfluxDB 
 
 ```
 exporters:
@@ -140,5 +142,14 @@ exporters:
     token: {InfluxDB token here}
     metrics_schema: telegraf-prometheus-v1
 
+```
+2. Route to another OTELCOL
+```
+exporters:
+  otlp:
+    endpoint: http://192.168.1.107:52123
+    tls:
+      insecure: true
+    
 ```
 
