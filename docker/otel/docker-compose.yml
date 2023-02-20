@@ -4,7 +4,8 @@ services:
     image: "otel/opentelemetry-collector-contrib:0.71.0"
     command: ["--config=/etc/otel-collector-config.yml"]
     volumes:
-      - /data/otel/docker/otel/config.yaml:/etc/otel-collector-config.yml
+      - ${CONFIG}:/etc/otel-collector-config.yml
     ports:
       - "52199:4317"
+
 
