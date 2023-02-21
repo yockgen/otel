@@ -1,0 +1,12 @@
+version: "3.9"
+services:
+  grafana-service-01:
+    image: "grafana/grafana-enterprise:9.3.6"
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    ports:
+      - "59500:3000"
+volumes:
+    grafana-storage:
+        external: false
+
