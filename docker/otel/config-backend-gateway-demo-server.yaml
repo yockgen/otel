@@ -1,0 +1,72 @@
+#extensions:
+#  health_check:
+#  pprof:
+#    endpoint: 0.0.0.0:1777
+#  zpages:
+#    endpoint: 0.0.0.0:55679
+
+receivers:
+  otlp:
+    protocols:
+      grpc:
+      http:
+
+#  opencensus:
+
+  # Collect own metrics
+#  prometheus:
+#    config:
+#      scrape_configs:
+#      - job_name: 'otel-collector'
+#        scrape_interval: 10s
+#        static_configs:
+#        - targets: ['0.0.0.0:8888']
+
+#  jaeger:
+#    protocols:
+#      grpc:
+#      thrift_binary:
+#      thrift_compact:
+#      thrift_http:
+
+#  zipkin:
+
+processors:
+  batch:
+
+exporters:
+ # logging:
+ #   logLevel: debug
+  influxdb:
+    endpoint: http://10.165.242.40:58100
+    timeout: 500ms
+    sending_queue:
+      enabled: true
+      num_consumers: 3
+      queue_size: 10
+    retry_on_failure:
+      enabled: true
+      initial_interval: 1s
+      max_interval: 3s
+      max_elapsed_time: 10s
+    org: intel
+    bucket: demobucket
+    token: UYNaaVVTJkaYA7vDm3w1Y5kB4q_SEM9aFki0ch4L3j_lJTF3wKt67MvGQVRzfVqXoBvjZEf_UlUX4oaKCbZwmg==
+    metrics_schema: telegraf-prometheus-v1
+    #metrics_schema: telegraf-prometheus-v2
+
+service:
+
+  pipelines:
+
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [influxdb]
+
+    metrics:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [influxdb]
+
+  #extensions: [health_check, pprof, zpages]
