@@ -1,0 +1,16 @@
+version: "3.9"
+services:
+  opentelemetry-collector-contrib-01:
+    image: "otel/opentelemetry-collector-contrib:0.71.0"
+    command: ["--config=/etc/otel-collector-config.yml"]
+    volumes:
+      - ${CONFIG}:/etc/otel-collector-config.yml
+    ports:
+      - "52198:4317"
+  opentelemetry-collector-contrib-02:
+    image: "otel/opentelemetry-collector-contrib:0.71.0"
+    command: ["--config=/etc/otel-collector-config.yml"]
+    volumes:
+      - ${CONFIG}:/etc/otel-collector-config.yml
+    ports:
+      - "52199:4317"
