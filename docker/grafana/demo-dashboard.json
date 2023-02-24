@@ -352,8 +352,10 @@
             "mode": "thresholds"
           },
           "mappings": [],
+          "max": 100,
+          "min": 0,
           "thresholds": {
-            "mode": "percentage",
+            "mode": "absolute",
             "steps": [
               {
                 "color": "green",
@@ -437,8 +439,10 @@
             "mode": "thresholds"
           },
           "mappings": [],
+          "max": 100,
+          "min": 0,
           "thresholds": {
-            "mode": "percentage",
+            "mode": "absolute",
             "steps": [
               {
                 "color": "green",
@@ -660,8 +664,10 @@
             "mode": "thresholds"
           },
           "mappings": [],
+          "max": 100,
+          "min": 0,
           "thresholds": {
-            "mode": "percentage",
+            "mode": "absolute",
             "steps": [
               {
                 "color": "green",
@@ -750,6 +756,6 @@
   "timezone": "",
   "title": "Intel Demo -  Cluster Nodes",
   "uid": "Xcxo6u14k",
-  "version": 52,
+  "version": 54,
   "weekStart": ""
 }
