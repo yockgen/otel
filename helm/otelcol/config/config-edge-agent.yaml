@@ -1,0 +1,31 @@
+receivers:
+
+  otlp:
+    protocols:
+      grpc:
+      http:
+
+processors:
+  batch:
+
+exporters:
+  otlp:
+    #endpoint: http://192.168.1.107:52123
+    endpoint: http://192.168.1.107:31172
+    tls:
+      insecure: true
+
+service:
+
+  pipelines:
+
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [otlp]
+
+    metrics:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [otlp]
+

@@ -31,7 +31,8 @@ exporters:
   #  metrics_schema: telegraf-prometheus-v1
 
   otlp:
-    endpoint: http://192.168.1.107:52123
+    #endpoint: http://192.168.1.107:52123
+    endpoint: http://192.168.1.107:31082
     tls:
       insecure: true
     #headers: {"x-api-key": "****************"}
