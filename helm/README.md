@@ -19,11 +19,11 @@ exporters:
     endpoint: http://192.168.1.107:31172
 ```
 ```
-root@node1:/data/otel# kubectl get svc
+root@node1:/data/otel/helm/otelcol# kubectl get svc
 NAME                       TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)           AGE
-kubernetes                 ClusterIP   10.233.0.1      <none>        443/TCP           2d3h
-otelcol-gateway            ClusterIP   10.233.44.138   <none>        54199/TCP         6h23m
-otelcol-gateway-nodeport   NodePort    10.233.55.209   <none>        54200:31172/TCP   6h23m
+kubernetes                 ClusterIP   10.233.0.1      <none>        443/TCP           2d16h
+otelcol-gateway            ClusterIP   10.233.13.112   <none>        54199/TCP         32m
+otelcol-gateway-nodeport   NodePort    10.233.4.81     <none>        54200:31082/TCP   32m
 ```
 
 2. Mod telegraf config to correct node port of "agent"  
