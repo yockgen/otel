@@ -23,7 +23,8 @@ metadata:
 spec:
   type: {{ .Values.serviceNodePort.type }}
   ports:
-    - port: {{ .Values.serviceNodePort.port }}
+    - nodePort: {{ .Values.serviceNodePort.nodePort }}
+      port: {{ .Values.serviceNodePort.port }}
       targetPort: {{ .Values.serviceNodePort.targetPort }}
       protocol: {{ .Values.serviceNodePort.protocol }}
       name: {{ .Values.serviceNodePort.name }}

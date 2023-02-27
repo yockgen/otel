@@ -49,6 +49,7 @@ service:
 
 serviceNodePort:
   type: NodePort
+  nodePort: 30695
   port: 55200
   targetPort: 4317
   protocol: TCP
