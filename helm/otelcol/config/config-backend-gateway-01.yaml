@@ -1,0 +1,32 @@
+receivers:
+
+  otlp:
+    protocols:
+      grpc:
+      http:
+
+processors:
+  batch:
+
+exporters:
+  influxdb:
+    endpoint: http://192.168.1.107:8086
+    timeout: 500ms
+    org: intel
+    bucket: intel
+    token: X6zYQsXQdkC4K-WE7Uza_Z7yYWkENe3PAbNPIjryr4_KECA75QoLqALgsX9XQjWMFhdhZFz1TiLjxYUiM7B1zw==
+    metrics_schema: telegraf-prometheus-v1
+
+service:
+
+  pipelines:
+
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [influxdb]
+
+    metrics:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [influxdb]

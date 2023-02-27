@@ -3,20 +3,8 @@ kind: ConfigMap
 metadata:
   name: collector-config
 data:
-  collector.yaml: |
-    receivers:
-      otlp:
-        protocols:
-          grpc:
-    processors:
-    exporters:
-      logging:
-    service:
-      pipelines:
-        traces:
-          receivers: [otlp]
-          processors: []
-          exporters: [logging]
+  collector.yaml: {{- toYaml .Values.otelconfig | nindent 8}}
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -59,17 +47,9 @@ spec:
           - mountPath: /conf
             name: collector-config
           ports:
-            - name: http
-              containerPort: 80
+            - name: otelport
+              containerPort: {{ .Values.otelport }}
               protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:

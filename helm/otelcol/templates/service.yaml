@@ -1,15 +1,31 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "otelcol.fullname" . }}
+  name: {{ .Values.service.name  }}
   labels:
     {{- include "otelcol.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.port }}
-      targetPort: http
-      protocol: TCP
-      name: http
+      targetPort: {{ .Values.service.targetPort }}
+      protocol: {{ .Values.service.protocol }}
+      name: {{ .Values.service.name }}
+  selector:
+    {{- include "otelcol.selectorLabels" . | nindent 4 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.serviceNodePort.name }}
+  labels:
+    {{- include "otelcol.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.serviceNodePort.type }}
+  ports:
+    - port: {{ .Values.serviceNodePort.port }}
+      targetPort: {{ .Values.serviceNodePort.targetPort }}
+      protocol: {{ .Values.serviceNodePort.protocol }}
+      name: {{ .Values.serviceNodePort.name }}
   selector:
     {{- include "otelcol.selectorLabels" . | nindent 4 }}

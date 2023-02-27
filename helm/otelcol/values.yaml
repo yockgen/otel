@@ -2,6 +2,10 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+otelconfig: ""
+otelport: 4317
+
+
 replicaCount: 1
 
 image:
@@ -38,7 +42,17 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  port: 80
+  port: 54199
+  targetPort: 4317
+  protocol: TCP
+  name: otelcol-gateway
+
+serviceNodePort:
+  type: NodePort
+  port: 54200
+  targetPort: 4317
+  protocol: TCP
+  name: otelcol-gateway-nodeport
 
 ingress:
   enabled: false
