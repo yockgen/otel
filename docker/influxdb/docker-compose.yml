@@ -1,0 +1,22 @@
+version: "3.9"
+services:
+  influxdb:
+    image: "influxdb:2.6.1"
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=admin@intel
+      - DOCKER_INFLUXDB_INIT_ORG=intel
+      - DOCKER_INFLUXDB_INIT_BUCKET=demobucket
+      - DOCKER_INFLUXDB_INIT_RETENTION=8h
+    command: ["influxd"]
+    volumes:
+      - config:/etc/influxdb2
+      - data:/var/lib/influxdb2
+    ports:
+      - "58100:8086"
+volumes:
+  config:
+    external: false
+  data:
+    external: false
