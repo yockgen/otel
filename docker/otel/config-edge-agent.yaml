@@ -1,12 +1,4 @@
-#extensions:
-#  health_check:
-#  pprof:
-#    endpoint: 0.0.0.0:1777
-#  zpages:
-#    endpoint: 0.0.0.0:55679
-
 receivers:
-
   otlp:
     protocols:
       grpc:
@@ -16,44 +8,23 @@ processors:
   batch:
 
 exporters:
-  #logging:
-  #  logLevel: debug
-
-  #file:
-  #  path: /data/temp/otel_db.json
-
-  #influxdb:
-  #  endpoint: http://192.168.1.107:8086
-  #  timeout: 500ms
-  #  org: intel
-  #  bucket: intel
-  #  token: X6zYQsXQdkC4K-WE7Uza_Z7yYWkENe3PAbNPIjryr4_KECA75QoLqALgsX9XQjWMFhdhZFz1TiLjxYUiM7B1zw==
-  #  metrics_schema: telegraf-prometheus-v1
-
   otlp:
-    #endpoint: http://192.168.1.107:52123
-    endpoint: http://192.168.1.107:31082
+    endpoint: http://192.168.1.107:52123    
     tls:
       insecure: true
-    #headers: {"x-api-key": "****************"}
-
 
 service:
 
   pipelines:
-
     traces:
       receivers: [otlp]
       processors: [batch]
       exporters: [otlp]
       #exporters: [influxdb]
-
     metrics:
       receivers: [otlp]
       processors: [batch]
       exporters: [otlp]
       #exporters: [influxdb]
 
-
-#  extensions: [health_check, pprof, zpages]
 
