@@ -4,19 +4,13 @@
       {
         "builtIn": 1,
         "datasource": {
-          "type": "grafana",
-          "uid": "-- Grafana --"
+          "type": "influxdb",
+          "uid": null
         },
         "enable": true,
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
         "name": "Annotations & Alerts",
-        "target": {
-          "limit": 100,
-          "matchAny": false,
-          "tags": [],
-          "type": "dashboard"
-        },
         "type": "dashboard"
       }
     ]
@@ -24,128 +18,450 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 1,
+  "id": 8,
   "links": [],
   "liveNow": false,
   "panels": [
     {
+      "collapsed": false,
       "datasource": {
-        "type": "influxdb",
-        "uid": "P8EFB3B3375746E67"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "counter {host=\"192.168.1.111\", interface=\"wlo1\"}"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Node02"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "counter {host=\"192.168.1.107\", interface=\"wlo1\"}"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Node01"
-              }
-            ]
-          }
-        ]
+        "uid": "prometheus"
       },
       "gridPos": {
-        "h": 6,
-        "w": 9,
+        "h": 1,
+        "w": 24,
         "x": 0,
         "y": 0
       },
-      "id": 10,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
+      "id": 37,
+      "panels": [],
       "targets": [
         {
           "datasource": {
-            "type": "influxdb",
-            "uid": "P8EFB3B3375746E67"
+            "uid": "prometheus"
           },
-          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"net_packets_recv\" and (r.interface == \"eno1\" or r.interface == \"enp88s0\")\r\n  )",
           "refId": "A"
         }
       ],
-      "title": "Network Packets Received",
-      "type": "timeseries"
+      "title": "Cluster nodes CPU overview",
+      "type": "row"
     },
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "P8EFB3B3375746E67"
+        "uid": null
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "index": 0,
+                  "text": "0"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 0,
+        "y": 1
+      },
+      "id": 14,
+      "links": [],
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.3.6",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": null
+          },
+          "hide": false,
+          "query": "from(bucket:\"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu != \"cpu-total\")\r\n  |> group(columns: [\"host\"])\r\n  |> distinct(column: \"host\")\r\n  |> count()\r\n  |> group()\r\n  |> sum()",
+          "refId": "A"
+        }
+      ],
+      "title": "Total nodes",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": null
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "Null": {
+                  "index": 0,
+                  "text": "0"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 5,
+        "y": 1
+      },
+      "id": 77,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.3.6",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": null
+          },
+          "hide": false,
+          "query": "from(bucket:\"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu != \"cpu-total\")\r\n  |> group(columns: [\"host\"])\r\n  |> distinct(column: \"cpu\")\r\n  |> count()\r\n  |> group()\r\n  |> sum()",
+          "refId": "A"
+        }
+      ],
+      "title": "Total cores",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": null
+      },
+      "description": "Cores that had utilization:\n- average < 2%\n- peak < 5%",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "index": 0,
+                  "text": "0"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 9,
+        "y": 1
+      },
+      "id": 18,
+      "links": [],
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.3.6",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": null
+          },
+          "query": "t1 =\r\n    from(bucket:\"intel\")\r\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n          |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu != \"cpu-total\")\r\n          |> group(columns: [\"host\",\"cpu\"])\r\n          |> mean()\r\n          |> filter(fn: (r) => r[\"_value\"] > 98.00)\r\n\r\nt2 =\r\n     from(bucket:\"intel\")\r\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n          |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu != \"cpu-total\")\r\n          |> group(columns: [\"host\",\"cpu\"])\r\n          |> min()\r\n          |> filter(fn: (r) => r[\"_value\"] > 95.00)\r\n        \r\n\r\nunion(tables: [t1, t2])\r\n|> distinct(column: \"cpu\")\r\n|> group()\r\n|> count()",
+          "refId": "A"
+        }
+      ],
+      "title": "Cores without any workload (Idle)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": null
+      },
+      "description": "Not classified as Idle nor Busy",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "index": 0,
+                  "text": "0"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 13,
+        "y": 1
+      },
+      "id": 20,
+      "links": [],
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.3.6",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": null
+          },
+          "hide": false,
+          "query": "t1 =\r\n    from(bucket:\"intel\")\r\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n          |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu != \"cpu-total\")\r\n          |> group(columns: [\"host\",\"cpu\"])          \r\n          |> mean()\r\n          |> filter(fn: (r) => r[\"_value\"] <= 1)\r\n\r\nt2 =\r\n     from(bucket:\"intel\")\r\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n          |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu != \"cpu-total\")\r\n          |> group(columns: [\"host\",\"cpu\"])          \r\n          |> min()\r\n          |> filter(fn: (r) => r[\"_value\"] == 0.00)\r\n        \r\n\r\nbusy = union(tables: [t1, t2])\r\n|> distinct(column: \"cpu\")\r\n|> group()\r\n|> count()\r\n\r\nt3 =\r\n    from(bucket:\"intel\")\r\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n          |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu != \"cpu-total\")\r\n          |> group(columns: [\"host\",\"cpu\"])\r\n          |> mean()\r\n          |> filter(fn: (r) => r[\"_value\"] > 98.00)\r\n\r\nt4 =\r\n     from(bucket:\"intel\")\r\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n          |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu != \"cpu-total\")\r\n          |> group(columns: [\"host\",\"cpu\"])\r\n          |> min()\r\n          |> filter(fn: (r) => r[\"_value\"] > 95.00)\r\n        \r\n\r\nidle = union(tables: [t3, t4])\r\n|> distinct(column: \"cpu\")\r\n|> group()\r\n|> count()\r\n\r\ntotal = from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu != \"cpu-total\")\r\n  |> group(columns: [\"host\",\"cpu\"])    \r\n  |> distinct(column: \"cpu\")\r\n  |> group()\r\n  |> count()\r\n\r\nused = union(tables: [busy, idle])\r\n     |> sum()\r\n     |> map(fn: (r) => ({r with _value: r._value * -1}))\r\n\r\nunion(tables: [used, total])\r\n|>sum()\r\n",
+          "refId": "B"
+        }
+      ],
+      "title": "Cores with workload (Running)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": null
+      },
+      "description": "Cores that had utilization:\n- average >= 99.00%\n- peak >= 99.99%",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "index": 0,
+                  "text": "0"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 16,
+        "y": 1
+      },
+      "id": 16,
+      "links": [],
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.3.6",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": null
+          },
+          "hide": false,
+          "query": "t1 =\r\n    from(bucket:\"intel\")\r\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n          |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu != \"cpu-total\")\r\n          |> group(columns: [\"host\",\"cpu\"])          \r\n          |> mean()\r\n          |> filter(fn: (r) => r[\"_value\"] <= 1)\r\n\r\nt2 =\r\n     from(bucket:\"intel\")\r\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n          |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu != \"cpu-total\")\r\n          |> group(columns: [\"host\",\"cpu\"])          \r\n          |> min()\r\n          |> filter(fn: (r) => r[\"_value\"] == 0.00)\r\n        \r\n\r\nunion(tables: [t1, t2])\r\n|> distinct(column: \"cpu\")\r\n|> group()\r\n|> count()",
+          "refId": "A"
+        }
+      ],
+      "title": "Cores with heavy workload (Busy)",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "datasource": {
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 5
+      },
+      "id": 10,
+      "panels": [],
+      "targets": [
+        {
+          "datasource": {
+            "uid": "prometheus"
+          },
+          "refId": "A"
+        }
+      ],
+      "title": "Cluster nodes power breakdown",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": null
       },
       "fieldConfig": {
         "defaults": {
@@ -159,7 +475,7 @@
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
-            "fillOpacity": 0,
+            "fillOpacity": 10,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -182,6 +498,7 @@
               "mode": "off"
             }
           },
+          "links": [],
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -200,160 +517,176 @@
         "overrides": [
           {
             "matcher": {
-              "id": "byName",
-              "options": "counter {host=\"192.168.1.111\", interface=\"wlo1\"}"
+              "id": "byFrameRefID",
+              "options": "C"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Node02"
+                "value": "DRAM Watt"
+              },
+              {
+                "id": "unit",
+                "value": "watt"
               }
             ]
           },
           {
             "matcher": {
-              "id": "byName",
-              "options": "counter {host=\"192.168.1.107\", interface=\"wlo1\"}"
+              "id": "byFrameRefID",
+              "options": "D"
             },
             "properties": [
               {
+                "id": "unit",
+                "value": "watt"
+              },
+              {
                 "id": "displayName",
-                "value": "Node01"
+                "value": "Busy CPUs Watt"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "F"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "watt"
+              },
+              {
+                "id": "displayName",
+                "value": "Idle CPUs Watt"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "E"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "watt"
+              },
+              {
+                "id": "displayName",
+                "value": "Other States CPUs Watt"
+              }
+            ]
+          },
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "Value"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                }
               }
             ]
           }
         ]
       },
       "gridPos": {
-        "h": 6,
-        "w": 8,
-        "x": 9,
-        "y": 0
-      },
-      "id": 2,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P8EFB3B3375746E67"
-          },
-          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"net_packets_sent\" and  (r.interface == \"eno1\" or r.interface == \"enp88s0\")\r\n  )",
-          "refId": "A"
-        }
-      ],
-      "title": "Network Packets Sent",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P8EFB3B3375746E67"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            }
-          },
-          "mappings": []
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "counter {host=\"192.168.1.107\", interface=\"wlo1\"}"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Node01"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "counter {host=\"192.168.1.111\", interface=\"wlo1\"}"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Node02"
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 5,
-        "x": 17,
-        "y": 0
+        "h": 8,
+        "w": 19,
+        "x": 0,
+        "y": 6
       },
       "id": 4,
       "options": {
         "legend": {
+          "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
           "showLegend": true
-        },
-        "pieType": "pie",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
         },
         "tooltip": {
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "9.3.6",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
-            "uid": "P8EFB3B3375746E67"
+            "uid": null
           },
-          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"net_packets_recv\" and (r.interface == \"eno1\" or r.interface == \"enp88s0\")\r\n  )",
-          "refId": "A"
+          "hide": false,
+          "query": "import \"strings\"\r\n\r\nt1 =\r\n    from(bucket:\"intel\")\r\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n          |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu != \"cpu-total\")\r\n          |> group(columns: [\"host\",\"cpu\"])          \r\n          |> mean()\r\n          |> map(\r\n        fn: (r) => ({\r\n           host: if r._value <= 1 then r.host else \"null\",\r\n           cpu: if r._value <= 1 then r.cpu else \"null\",\r\n           _value: if exists r._value then r._value else 0.00,\r\n           _time: if exists r._time then r._time else now(),\r\n           _start: if exists r._start then r._start else now(),\r\n           _stop: if exists r._stop then r._stop else now(),\r\n           }),\r\n    )  \r\n    |> group(columns: [\"host\",\"cpu\"])\r\n          //|> filter(fn: (r) => r[\"_value\"] <= 1)\r\n\r\nt2 =\r\n     from(bucket:\"intel\")\r\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n          |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu != \"cpu-total\")\r\n          |> group(columns: [\"host\",\"cpu\"])          \r\n          |> min()\r\n          |> map(\r\n        fn: (r) => ({\r\n           host: if r._value == 0.00 then r.host else \"null\",\r\n           cpu: if r._value == 0.00 then r.cpu else \"null\",\r\n           _value: if exists r._value then r._value else 0.00,\r\n           _time: if exists r._time then r._time else now(),\r\n           _start: if exists r._start then r._start else now(),\r\n           _stop: if exists r._stop then r._stop else now(),\r\n           }),\r\n    )  \r\n    |> group(columns: [\"host\",\"cpu\"])\r\n          //|> filter(fn: (r) => r[\"_value\"] == 0.00)\r\n        \r\n\r\nbusyhost = union(tables: [t1, t2])\r\n |> map(fn: (r) => ({r with cpu: strings.replace(v: r.cpu, t: \"cpu\", u: \"\", i: 1)}))\r\n |> tableFind(fn: (key) => true)\r\n |> getColumn(column: \"host\")\r\n\r\nbusycpu = union(tables: [t1, t2])\r\n |> map(fn: (r) => ({r with cpu: strings.replace(v: r.cpu, t: \"cpu\", u: \"\", i: 1)}))\r\n |> tableFind(fn: (key) => true)\r\n |> getColumn(column: \"cpu\")\r\n\r\n busyhostwithpckid = from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_core_cpu_frequency_mhz\")\r\n   |> map(\r\n        fn: (r) => ({\r\n           host: if contains(value: r.host, set: busyhost) then r.host else \"null\",\r\n           cpu_id: if contains(value: r.cpu_id, set: busycpu) then r.cpu_id else \"null\",\r\n           package_id: if contains(value: r.host, set: busyhost) and contains(value: r.cpu_id, set: busycpu) then r.package_id else \"null\",\r\n           core_id: if exists r.core_id then r.core_id else \"null\",\r\n           _value: if exists r._value then r._value else 0.00,\r\n           _time: if exists r._time then r._time else now(),\r\n           _start: if exists r._start then r._start else now(),\r\n           _stop: if exists r._stop then r._stop else now(),\r\n           }),\r\n    )  \r\n |> tableFind(fn: (key) => true)\r\n |> getColumn(column: \"package_id\")\r\n\r\n\r\n  from(bucket: \"intel\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_package_current_power_consumption_watts\")\r\n |> group()\r\n |> filter(fn: (r) => contains(value: r.host, set: busyhost))\r\n |> filter(fn: (r) => contains(value: r.package_id, set: busyhostwithpckid))\r\n\r\n ",
+          "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": null
+          },
+          "hide": false,
+          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_package_current_dram_power_consumption_watts\")\r\n   |> group(columns: [\"_time\"])\r\n |> sum(column: \"_value\")\r\n |> group()",
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": null
+          },
+          "hide": false,
+          "query": "import \"strings\"\r\n\r\nt1 =\r\n    from(bucket:\"intel\")\r\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n          |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu != \"cpu-total\")\r\n          |> group(columns: [\"host\",\"cpu\"])\r\n          |> mean()\r\n          |> map(\r\n        fn: (r) => ({\r\n           host: if r._value > 98.00 then r.host else \"null\",\r\n           cpu: if r._value > 98.00 then r.cpu else \"null\",\r\n           _value: if exists r._value then r._value else 0.00,\r\n           _time: if exists r._time then r._time else now(),\r\n           _start: if exists r._start then r._start else now(),\r\n           _stop: if exists r._stop then r._stop else now(),\r\n           }),\r\n    )  \r\n    |> group(columns: [\"host\",\"cpu\"])\r\n          //|> filter(fn: (r) => r[\"_value\"] > 98.00)\r\n\r\nt2 =\r\n     from(bucket:\"intel\")\r\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n          |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu != \"cpu-total\")\r\n          |> group(columns: [\"host\",\"cpu\"])\r\n          |> min()\r\n          |> map(\r\n        fn: (r) => ({\r\n           host: if r._value > 95.00 then r.host else \"null\",\r\n           cpu: if r._value > 95.00 then r.cpu else \"null\",\r\n           _value: if exists r._value then r._value else 0.00,\r\n           _time: if exists r._time then r._time else now(),\r\n           _start: if exists r._start then r._start else now(),\r\n           _stop: if exists r._stop then r._stop else now(),\r\n           }),\r\n    )  \r\n    |> group(columns: [\"host\",\"cpu\"])\r\n          //|> filter(fn: (r) => r[\"_value\"] > 95.00)\r\n        \r\n\r\nbusyhost = union(tables: [t1, t2])\r\n |> map(fn: (r) => ({r with cpu: strings.replace(v: r.cpu, t: \"cpu\", u: \"\", i: 1)}))\r\n |> tableFind(fn: (key) => true)\r\n |> getColumn(column: \"host\")\r\n\r\nbusycpu = union(tables: [t1, t2])\r\n |> map(fn: (r) => ({r with cpu: strings.replace(v: r.cpu, t: \"cpu\", u: \"\", i: 1)}))\r\n |> tableFind(fn: (key) => true)\r\n |> getColumn(column: \"cpu\")\r\n\r\n busyhostwithpckid = from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_core_cpu_frequency_mhz\")\r\n  |> map(\r\n        fn: (r) => ({\r\n           host: if contains(value: r.host, set: busyhost) then r.host else \"null\",\r\n           cpu_id: if contains(value: r.cpu_id, set: busycpu) then r.cpu_id else \"null\",\r\n           package_id: if contains(value: r.host, set: busyhost) and contains(value: r.cpu_id, set: busycpu) then r.package_id else \"null\",\r\n           core_id: if exists r.core_id then r.core_id else \"null\",\r\n           _value: if exists r._value then r._value else 0.00,\r\n           _time: if exists r._time then r._time else now(),\r\n           _start: if exists r._start then r._start else now(),\r\n           _stop: if exists r._stop then r._stop else now(),\r\n           }),\r\n    )  \r\n  //|> filter(fn: (r) => contains(value: r.host, set: busyhost))\r\n  //|> filter(fn: (r) => contains(value: r.cpu_id, set: busycpu))\r\n |> tableFind(fn: (key) => true)\r\n |> getColumn(column: \"package_id\")\r\n\r\n\r\n  from(bucket: \"intel\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_package_current_power_consumption_watts\")\r\n |> group()\r\n |> filter(fn: (r) => contains(value: r.host, set: busyhost))\r\n |> filter(fn: (r) => contains(value: r.package_id, set: busyhostwithpckid))\r\n \r\n\r\n\r\n",
+          "refId": "F"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": null
+          },
+          "hide": false,
+          "query": "import \"strings\"\r\n\r\nt1 =\r\n    from(bucket:\"intel\")\r\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n          |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu != \"cpu-total\")\r\n          |> group(columns: [\"host\",\"cpu\"])          \r\n          |> mean()\r\n          |> map(\r\n        fn: (r) => ({\r\n           host: if r._value <= 1 then r.host else \"not found\",\r\n           cpu: if r._value <= 1 then r.cpu else \"not found\",\r\n           _value: if exists r._value then r._value else 0.00,\r\n           _time: if exists r._time then r._time else now(),\r\n           _start: if exists r._start then r._start else now(),\r\n           _stop: if exists r._stop then r._stop else now(),\r\n           }),\r\n    )  \r\n    |> group(columns: [\"host\",\"cpu\"])\r\n          //|> filter(fn: (r) => r[\"_value\"] <= 1)\r\n\r\nt2 =\r\n     from(bucket:\"intel\")\r\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n          |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu != \"cpu-total\")\r\n          |> group(columns: [\"host\",\"cpu\"])          \r\n          |> min()\r\n          |> map(\r\n        fn: (r) => ({\r\n           host: if r._value == 0.00 then r.host else \"not found\",\r\n           cpu: if r._value == 0.00 then r.cpu else \"not found\",\r\n           _value: if exists r._value then r._value else 0.00,\r\n           _time: if exists r._time then r._time else now(),\r\n           _start: if exists r._start then r._start else now(),\r\n           _stop: if exists r._stop then r._stop else now(),\r\n           }),\r\n    )  \r\n    |> group(columns: [\"host\",\"cpu\"])\r\n          //|> filter(fn: (r) => r[\"_value\"] == 0.00)\r\n        \r\n\r\nbusyhost = union(tables: [t1, t2])\r\n |> map(fn: (r) => ({r with cpu: strings.replace(v: r.cpu, t: \"cpu\", u: \"\", i: 1)}))\r\n |> tableFind(fn: (key) => true)\r\n |> getColumn(column: \"host\")\r\n\r\nbusycpu = union(tables: [t1, t2])\r\n |> map(fn: (r) => ({r with cpu: strings.replace(v: r.cpu, t: \"cpu\", u: \"\", i: 1)}))\r\n |> tableFind(fn: (key) => true)\r\n |> getColumn(column: \"cpu\")\r\n\r\n busyhostwithpckid = from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_core_cpu_frequency_mhz\")\r\n  |> map(\r\n        fn: (r) => ({\r\n           host: if contains(value: r.host, set: busyhost) then r.host else \"not found\",\r\n           cpu_id: if contains(value: r.cpu_id, set: busycpu) then r.cpu_id else \"not found\",\r\n           package_id: if contains(value: r.host, set: busyhost) and contains(value: r.cpu_id, set: busycpu) then r.package_id else \"not found\",\r\n           core_id: if exists r.core_id then r.core_id else \"not found\",\r\n           _value: if exists r._value then r._value else 0.00,\r\n           _time: if exists r._time then r._time else now(),\r\n           _start: if exists r._start then r._start else now(),\r\n           _stop: if exists r._stop then r._stop else now(),\r\n           }),\r\n    )  \r\n  //|> filter(fn: (r) => contains(value: r.host, set: busyhost))\r\n  //|> filter(fn: (r) => contains(value: r.cpu_id, set: busycpu))\r\n |> tableFind(fn: (key) => true)\r\n |> getColumn(column: \"package_id\")\r\n\r\nbusypower = from(bucket: \"intel\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_package_current_power_consumption_watts\")\r\n |> group()\r\n |> filter(fn: (r) => contains(value: r.host, set: busyhost))\r\n |> filter(fn: (r) => contains(value: r.package_id, set: busyhostwithpckid))\r\n\r\n\r\nt3 =\r\n    from(bucket:\"intel\")\r\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n          |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu != \"cpu-total\")\r\n          |> group(columns: [\"host\",\"cpu\"])\r\n          |> mean()\r\n          |> map(\r\n        fn: (r) => ({\r\n           host: if r._value > 98.00 then r.host else \"not found\",\r\n           cpu: if r._value > 98.00 then r.cpu else \"not found\",\r\n           _value: if exists r._value then r._value else 0.00,\r\n           _time: if exists r._time then r._time else now(),\r\n           _start: if exists r._start then r._start else now(),\r\n           _stop: if exists r._stop then r._stop else now(),\r\n           }),\r\n    )  \r\n    |> group(columns: [\"host\",\"cpu\"])\r\n          //|> filter(fn: (r) => r[\"_value\"] > 98.00)\r\n\r\nt4 =\r\n     from(bucket:\"intel\")\r\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n          |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu != \"cpu-total\")\r\n          |> group(columns: [\"host\",\"cpu\"])\r\n          |> min()\r\n          |> map(\r\n        fn: (r) => ({\r\n           host: if r._value > 95.00 then r.host else \"not found\",\r\n           cpu: if r._value > 95.00 then r.cpu else \"not found\",\r\n           _value: if exists r._value then r._value else 0.00,\r\n           _time: if exists r._time then r._time else now(),\r\n           _start: if exists r._start then r._start else now(),\r\n           _stop: if exists r._stop then r._stop else now(),\r\n           }),\r\n    )  \r\n    |> group(columns: [\"host\",\"cpu\"])\r\n          //|> filter(fn: (r) => r[\"_value\"] > 95.00)\r\n        \r\n\r\nidlehost = union(tables: [t3, t4])\r\n |> map(fn: (r) => ({r with cpu: strings.replace(v: r.cpu, t: \"cpu\", u: \"\", i: 1)}))\r\n |> tableFind(fn: (key) => true)\r\n |> getColumn(column: \"host\")\r\n\r\nidlecpu = union(tables: [t3, t4])\r\n |> map(fn: (r) => ({r with cpu: strings.replace(v: r.cpu, t: \"cpu\", u: \"\", i: 1)}))\r\n |> tableFind(fn: (key) => true)\r\n |> getColumn(column: \"cpu\")\r\n\r\n idlehostwithpckid = from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_core_cpu_frequency_mhz\")\r\n  |> map(\r\n        fn: (r) => ({\r\n           host: if contains(value: r.host, set: idlehost) then r.host else \"not found\",\r\n           cpu_id: if contains(value: r.cpu_id, set: idlecpu) then r.cpu_id else \"not found\",\r\n           package_id: if contains(value: r.host, set: idlehost) and contains(value: r.cpu_id, set: idlecpu) then r.package_id else \"not found\",\r\n           core_id: if exists r.core_id then r.core_id else \"not found\",\r\n           _value: if exists r._value then r._value else 0.00,\r\n           _time: if exists r._time then r._time else now(),\r\n           _start: if exists r._start then r._start else now(),\r\n           _stop: if exists r._stop then r._stop else now(),\r\n           }),\r\n    )  \r\n  //|> filter(fn: (r) => contains(value: r.host, set: idlehost))\r\n // |> filter(fn: (r) => contains(value: r.cpu_id, set: idlecpu))\r\n |> tableFind(fn: (key) => true)\r\n |> getColumn(column: \"package_id\")\r\n\r\n\r\nidlepower = from(bucket: \"intel\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_package_current_power_consumption_watts\")\r\n |> group()\r\n |> filter(fn: (r) => contains(value: r.host, set: idlehost))\r\n |> filter(fn: (r) => contains(value: r.package_id, set: idlehostwithpckid))\r\n\r\nusedcpu = union(tables: [idlepower, busypower])\r\n|> map(fn: (r) => ({ hostcpu: strings.joinStr(arr: [r.host,r.package_id ], v: \", \"), _value:r._value }))\r\n |> tableFind(fn: (key) => true)\r\n |> getColumn(column: \"hostcpu\")\r\n\r\n\r\nfrom(bucket: \"intel\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_package_current_power_consumption_watts\")\r\n |> group()\r\n |> map(fn: (r) => ({ hostcpu: strings.joinStr(arr: [r.host,r.package_id ], v: \", \"), _value:r._value ,\r\n _time: r._time, _start: r._start, _stop:r._stop }))\r\n |> filter(fn: (r) => not contains(value: r.hostcpu, set: usedcpu))\r\n\r\n \r\n\r\n",
+          "refId": "E"
         }
       ],
-      "title": "Packets Received ",
-      "type": "piechart"
+      "title": "Cluster nodes CPU / DRAM ",
+      "type": "timeseries"
     },
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "P8EFB3B3375746E67"
+        "uid": null
       },
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
           },
-          "mappings": [],
-          "max": 100,
-          "min": 0,
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
+            }
+          ],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -366,131 +699,25 @@
                 "value": 80
               }
             ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "gauge {cpu=\"cpu-total\", host=\"192.168.1.107\"}"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Node01"
-              }
-            ]
           },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "gauge {cpu=\"cpu-total\", host=\"192.168.1.111\"}"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Node02"
-              }
-            ]
-          }
-        ]
+          "unit": "watt"
+        },
+        "overrides": []
       },
       "gridPos": {
-        "h": 5,
-        "w": 7,
-        "x": 0,
-        "y": 6
-      },
-      "id": 8,
-      "options": {
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true
-      },
-      "pluginVersion": "9.3.8",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P8EFB3B3375746E67"
-          },
-          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"cpu_usage_idle\" and r.cpu== \"cpu-total\"\r\n  )\r\n  |> map(fn: (r) => ({r with _value: 100.0 - r._value}))",
-          "refId": "A"
-        }
-      ],
-      "title": "CPU Usage System",
-      "type": "gauge"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P8EFB3B3375746E67"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "max": 100,
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "dark-red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "gauge 192.168.1.107"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Node01"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "gauge 192.168.1.111"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Node02"
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 7,
-        "x": 7,
+        "h": 4,
+        "w": 5,
+        "x": 19,
         "y": 6
       },
       "id": 6,
+      "links": [],
+      "maxDataPoints": 100,
       "options": {
-        "orientation": "auto",
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -498,27 +725,52 @@
           "fields": "",
           "values": false
         },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true
+        "text": {},
+        "textMode": "auto"
       },
-      "pluginVersion": "9.3.8",
+      "pluginVersion": "9.3.6",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
-            "uid": "P8EFB3B3375746E67"
+            "uid": null
           },
-          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mem_used_percent\")  ",
+          "hide": false,
+          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_package_current_power_consumption_watts\")\r\n  |> group()\r\n  |> sum()",
           "refId": "A"
         }
       ],
-      "title": "Memory Usage",
-      "type": "gauge"
+      "title": "Cluster nodes CPU-only power consumption (now)",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "datasource": {
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 14
+      },
+      "id": 12,
+      "panels": [],
+      "targets": [
+        {
+          "datasource": {
+            "uid": "prometheus"
+          },
+          "refId": "A"
+        }
+      ],
+      "title": "Cluster nodes CPU savings opportunity",
+      "type": "row"
     },
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "P8EFB3B3375746E67"
+        "uid": null
       },
       "fieldConfig": {
         "defaults": {
@@ -532,7 +784,1549 @@
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
-            "fillOpacity": 0,
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "links": [],
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "watt"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "B"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "watt"
+              },
+              {
+                "id": "displayName",
+                "value": "CPU Power Usage"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "C"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "watt"
+              },
+              {
+                "id": "displayName",
+                "value": "Estimated Saving from idle core"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 19,
+        "x": 0,
+        "y": 15
+      },
+      "id": 2,
+      "maxDataPoints": 1790,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "9.3.6",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": null
+          },
+          "hide": false,
+          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_package_current_power_consumption_watts\")\r\n   |> group(columns: [\"_time\"])\r\n |> sum(column: \"_value\")\r\n |> group()",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": null
+          },
+          "hide": false,
+          "query": "import \"strings\"\r\nimport \"join\"\r\n\r\n//prometheus rules = detailed_per_core_watts_estimate\r\n\r\nestimatedsavedfrequency = from(bucket: \"intel\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_core_cpu_frequency_mhz\")\r\n |> sort(columns: [\"_time\"])\r\n |> group()\r\n //evrything is times 0.6\r\n |> map(fn: (r) => ({host:r.host,cpu_id: r.cpu_id, package_id: r.package_id, _value:r._value * 0.6 , _time: r._time, _start: r._start, _stop:r._stop }))\r\n |> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n //|>count()\r\n\r\n  totalfrequencybypackage = from(bucket: \"intel\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_core_cpu_frequency_mhz\")\r\n |> sort(columns: [\"_time\"])\r\n |> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n\r\n estimatepercent = join.time(\r\n    left: estimatedsavedfrequency,\r\n    right: totalfrequencybypackage,\r\n    as: (l, r) => ({l with _value: l._value / r._value}),\r\n)\r\n\r\ntotalpowerbypackage = from(bucket: \"intel\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_package_current_power_consumption_watts\") \r\n |> sort(columns: [\"_time\"])\r\n |> map(fn: (r) => ({cpu_id:\"0\",host: r.host,package_id:r.package_id, _value: r._value, _time: r._time, _start: r._start, _stop:r._stop }))\r\n |> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n\r\n //detailed_per_core_watts_estimate final table\r\n\r\nestimatewatts = join.time(\r\n    left: estimatepercent,\r\n    right: totalpowerbypackage,\r\n    as: (l, r) => ({l with _value: l._value * r._value, cpu_id: l.cpu_id}),\r\n)\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n//estimatewatts\r\n//detailed_per_core_c1_state_watts_estimate\r\n\r\nc1Residency = from(bucket: \"intel\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_core_cpu_c1_state_residency_percent\")\r\n |> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n  //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n //c1Residency\r\n\r\n//detailed_per_core_c1_state_watts_estimate final table\r\nc1estimatepercore = join.time(\r\n    left: c1Residency,\r\n    right: estimatewatts,\r\n    as: (l, r) => ({l with _value: (l._value * r._value) / 100.00}),\r\n)\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n\r\n//detailed_per_core_non_c1_c6_state_watts_estimate\r\n\r\nc6Residency = from(bucket: \"intel\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_core_cpu_c6_state_residency_percent\")\r\n |> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n  //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n\r\n c1c6Residency = join.time(\r\n    left: c1Residency,\r\n    right: c6Residency,\r\n    as: (l, r) => ({l with _value: 100.00 - (r._value + l._value)}),\r\n)\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n  //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n\r\n\r\n//detailed_per_core_non_c1_c6_state_watts_estimate final table\r\nc1c6estimatepercore = join.time(\r\n    left: c1c6Residency,\r\n    right: estimatewatts,\r\n    as: (l, r) => ({l with _value: (l._value * r._value) / 100.00}),\r\n)\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n  //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n//c1c6estimatepercore\r\n//start idle_core_savings_opportunity_estimated_last\r\n\r\n//idle core\r\nt1 =\r\n    from(bucket:\"intel\")\r\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n          |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu != \"cpu-total\")\r\n          |> group(columns: [\"host\",\"cpu\"])\r\n          |> mean()\r\n          |> filter(fn: (r) => r[\"_value\"] > 98.00)\r\n\r\nt2 =\r\n     from(bucket:\"intel\")\r\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n          |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu != \"cpu-total\")\r\n          |> group(columns: [\"host\",\"cpu\"])\r\n          |> min()\r\n          |> filter(fn: (r) => r[\"_value\"] > 95.00)\r\n        \r\nidlehost = union(tables: [t1, t2])\r\n |> map(fn: (r) => ({r with cpu: strings.replace(v: r.cpu, t: \"cpu\", u: \"\", i: 1)}))\r\n |> group()\r\n |> tableFind(fn: (key) => true)\r\n |> getColumn(column: \"host\")\r\n\r\nidlecpu = union(tables: [t1, t2])\r\n |> map(fn: (r) => ({r with cpu: strings.replace(v: r.cpu, t: \"cpu\", u: \"\", i: 1)}))\r\n |> group()\r\n |> tableFind(fn: (key) => true)\r\n |> getColumn(column: \"cpu\")\r\n\r\n//sum idle c1c6\r\nc1c6sum = c1c6estimatepercore\r\n|> filter(fn: (r) => contains(value: r.host, set: idlehost))\r\n|> filter(fn: (r) => contains(value: r.cpu_id, set: idlecpu))\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n|> sum()\r\n|> group()\r\n//all sum times 0.65\r\n|> map(fn: (r) => ({host:r.host,cpu_id: r.cpu_id, package_id: r.package_id, _value:r._value * 0.65 , _time: r._time, _start: r._start, _stop:r._stop }))\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n//|> sum()\r\n//|> group()\r\n\r\n//sum idle c1\r\nc1sum = c1estimatepercore\r\n|> filter(fn: (r) => contains(value: r.host, set: idlehost))\r\n|> filter(fn: (r) => contains(value: r.cpu_id, set: idlecpu))\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n|> sum()\r\n|> group()\r\n//all sum times 0.25\r\n|> map(fn: (r) => ({host:r.host,cpu_id: r.cpu_id, package_id: r.package_id, _value:r._value * 0.25 , _time: r._time, _start: r._start, _stop:r._stop }))\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n//|> sum()\r\n//|> group()\r\n\r\n//start idle_core_savings_opportunity_estimated_last final table\r\nidlecoresavingsopportunity = join.time(\r\n    left: c1c6sum,\r\n    right: c1sum,\r\n    as: (l, r) => ({l with _value: l._value + r._value}),\r\n)\r\n//|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n//|> sum()\r\n |> group(columns: [\"_time\"])\r\n |> sum(column: \"_value\")\r\n |> group()\r\n\r\nidlecoresavingsopportunity\r\n\r\n\r\n",
+          "refId": "C"
+        }
+      ],
+      "title": "Cluster nodes CPU power savings opportunity",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": null
+      },
+      "description": "*Estimated savings from putting idle cores to C6*\n\nCore is considered idle when average busy cycles percentage is < 2% and peak < 5%\n\nPower can be saved when:\n- Core is in running state despite low load\n- Core is in C1 state but could be in C6",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "watt"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 5,
+        "x": 19,
+        "y": 15
+      },
+      "id": 22,
+      "links": [],
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.3.6",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": null
+          },
+          "query": "import \"strings\"\r\nimport \"join\"\r\n\r\n//prometheus rules = detailed_per_core_watts_estimate\r\n\r\nestimatedsavedfrequency = from(bucket: \"intel\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_core_cpu_frequency_mhz\")\r\n |> sort(columns: [\"_time\"])\r\n |> group()\r\n //evrything is times 0.6\r\n |> map(fn: (r) => ({host:r.host,cpu_id: r.cpu_id, package_id: r.package_id, _value:r._value * 0.6 , _time: r._time, _start: r._start, _stop:r._stop }))\r\n |> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n //|>count()\r\n\r\n  totalfrequencybypackage = from(bucket: \"intel\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_core_cpu_frequency_mhz\")\r\n |> sort(columns: [\"_time\"])\r\n |> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n\r\n estimatepercent = join.time(\r\n    left: estimatedsavedfrequency,\r\n    right: totalfrequencybypackage,\r\n    as: (l, r) => ({l with _value: l._value / r._value}),\r\n)\r\n\r\ntotalpowerbypackage = from(bucket: \"intel\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_package_current_power_consumption_watts\") \r\n |> sort(columns: [\"_time\"])\r\n |> map(fn: (r) => ({cpu_id:\"0\",host: r.host,package_id:r.package_id, _value: r._value, _time: r._time, _start: r._start, _stop:r._stop }))\r\n |> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n\r\n //detailed_per_core_watts_estimate final table\r\n\r\nestimatewatts = join.time(\r\n    left: estimatepercent,\r\n    right: totalpowerbypackage,\r\n    as: (l, r) => ({l with _value: l._value * r._value, cpu_id: l.cpu_id}),\r\n)\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n//estimatewatts\r\n//detailed_per_core_c1_state_watts_estimate\r\n\r\nc1Residency = from(bucket: \"intel\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_core_cpu_c1_state_residency_percent\")\r\n |> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n  //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n //c1Residency\r\n\r\n//detailed_per_core_c1_state_watts_estimate final table\r\nc1estimatepercore = join.time(\r\n    left: c1Residency,\r\n    right: estimatewatts,\r\n    as: (l, r) => ({l with _value: (l._value * r._value) / 100.00}),\r\n)\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n\r\n//detailed_per_core_non_c1_c6_state_watts_estimate\r\n\r\nc6Residency = from(bucket: \"intel\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_core_cpu_c6_state_residency_percent\")\r\n |> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n  //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n\r\n c1c6Residency = join.time(\r\n    left: c1Residency,\r\n    right: c6Residency,\r\n    as: (l, r) => ({l with _value: 100.00 - (r._value + l._value)}),\r\n)\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n  //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n\r\n\r\n//detailed_per_core_non_c1_c6_state_watts_estimate final table\r\nc1c6estimatepercore = join.time(\r\n    left: c1c6Residency,\r\n    right: estimatewatts,\r\n    as: (l, r) => ({l with _value: (l._value * r._value) / 100.00}),\r\n)\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n  //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n//c1c6estimatepercore\r\n//start idle_core_savings_opportunity_estimated_last\r\n\r\n//idle core\r\nt1 =\r\n    from(bucket:\"intel\")\r\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n          |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu != \"cpu-total\")\r\n          |> group(columns: [\"host\",\"cpu\"])\r\n          |> mean()\r\n          |> filter(fn: (r) => r[\"_value\"] > 98.00)\r\n\r\nt2 =\r\n     from(bucket:\"intel\")\r\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n          |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu != \"cpu-total\")\r\n          |> group(columns: [\"host\",\"cpu\"])\r\n          |> min()\r\n          |> filter(fn: (r) => r[\"_value\"] > 95.00)\r\n        \r\nidlehost = union(tables: [t1, t2])\r\n |> map(fn: (r) => ({r with cpu: strings.replace(v: r.cpu, t: \"cpu\", u: \"\", i: 1)}))\r\n |> group()\r\n |> tableFind(fn: (key) => true)\r\n |> getColumn(column: \"host\")\r\n\r\nidlecpu = union(tables: [t1, t2])\r\n |> map(fn: (r) => ({r with cpu: strings.replace(v: r.cpu, t: \"cpu\", u: \"\", i: 1)}))\r\n |> group()\r\n |> tableFind(fn: (key) => true)\r\n |> getColumn(column: \"cpu\")\r\n\r\n//sum idle c1c6\r\nc1c6sum = c1c6estimatepercore\r\n|> filter(fn: (r) => contains(value: r.host, set: idlehost))\r\n|> filter(fn: (r) => contains(value: r.cpu_id, set: idlecpu))\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n|> sum()\r\n|> group()\r\n//all sum times 0.65\r\n|> map(fn: (r) => ({host:r.host,cpu_id: r.cpu_id, package_id: r.package_id, _value:r._value * 0.65 , _time: r._time, _start: r._start, _stop:r._stop }))\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n//|> sum()\r\n//|> group()\r\n\r\n//sum idle c1\r\nc1sum = c1estimatepercore\r\n|> filter(fn: (r) => contains(value: r.host, set: idlehost))\r\n|> filter(fn: (r) => contains(value: r.cpu_id, set: idlecpu))\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n|> sum()\r\n|> group()\r\n//all sum times 0.25\r\n|> map(fn: (r) => ({host:r.host,cpu_id: r.cpu_id, package_id: r.package_id, _value:r._value * 0.25 , _time: r._time, _start: r._start, _stop:r._stop }))\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n//|> sum()\r\n//|> group()\r\n\r\n//start idle_core_savings_opportunity_estimated_last final table\r\nidlecoresavingsopportunity = join.time(\r\n    left: c1c6sum,\r\n    right: c1sum,\r\n    as: (l, r) => ({l with _value: l._value + r._value}),\r\n)\r\n//|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n//|> sum()\r\n |> group(columns: [\"_time\"])\r\n |> sum(column: \"_value\")\r\n |> group()\r\n\r\nidlecoresavingsopportunity\r\n\r\n\r\n",
+          "refId": "A"
+        }
+      ],
+      "title": "Estimated savings from putting idle cores to C6",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": null
+      },
+      "description": "*Estimated energy savings from putting cores to C6 (last 24h)*",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 4,
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "kwatth"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 5,
+        "x": 19,
+        "y": 18
+      },
+      "hideTimeOverride": false,
+      "id": 40,
+      "interval": "",
+      "links": [],
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.3.6",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": null
+          },
+          "query": "import \"strings\"\r\nimport \"join\"\r\n\r\n//prometheus rules = detailed_per_core_watts_estimate\r\n\r\nestimatedsavedfrequency = from(bucket: \"intel\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_core_cpu_frequency_mhz\")\r\n |> sort(columns: [\"_time\"])\r\n |> group()\r\n //evrything is times 0.6\r\n |> map(fn: (r) => ({host:r.host,cpu_id: r.cpu_id, package_id: r.package_id, _value:r._value * 0.6 , _time: r._time, _start: r._start, _stop:r._stop }))\r\n |> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n //|>count()\r\n\r\n  totalfrequencybypackage = from(bucket: \"intel\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_core_cpu_frequency_mhz\")\r\n |> sort(columns: [\"_time\"])\r\n |> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n\r\n estimatepercent = join.time(\r\n    left: estimatedsavedfrequency,\r\n    right: totalfrequencybypackage,\r\n    as: (l, r) => ({l with _value: l._value / r._value}),\r\n)\r\n\r\ntotalpowerbypackage = from(bucket: \"intel\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_package_current_power_consumption_watts\") \r\n |> sort(columns: [\"_time\"])\r\n |> map(fn: (r) => ({cpu_id:\"0\",host: r.host,package_id:r.package_id, _value: r._value, _time: r._time, _start: r._start, _stop:r._stop }))\r\n |> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n\r\n //detailed_per_core_watts_estimate final table\r\n\r\nestimatewatts = join.time(\r\n    left: estimatepercent,\r\n    right: totalpowerbypackage,\r\n    as: (l, r) => ({l with _value: l._value * r._value, cpu_id: l.cpu_id}),\r\n)\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n//estimatewatts\r\n//detailed_per_core_c1_state_watts_estimate\r\n\r\nc1Residency = from(bucket: \"intel\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_core_cpu_c1_state_residency_percent\")\r\n |> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n  //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n //c1Residency\r\n\r\n//detailed_per_core_c1_state_watts_estimate final table\r\nc1estimatepercore = join.time(\r\n    left: c1Residency,\r\n    right: estimatewatts,\r\n    as: (l, r) => ({l with _value: (l._value * r._value) / 100.00}),\r\n)\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n\r\n//detailed_per_core_non_c1_c6_state_watts_estimate\r\n\r\nc6Residency = from(bucket: \"intel\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_core_cpu_c6_state_residency_percent\")\r\n |> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n  //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n\r\n c1c6Residency = join.time(\r\n    left: c1Residency,\r\n    right: c6Residency,\r\n    as: (l, r) => ({l with _value: 100.00 - (r._value + l._value)}),\r\n)\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n  //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n\r\n\r\n//detailed_per_core_non_c1_c6_state_watts_estimate final table\r\nc1c6estimatepercore = join.time(\r\n    left: c1c6Residency,\r\n    right: estimatewatts,\r\n    as: (l, r) => ({l with _value: (l._value * r._value) / 100.00}),\r\n)\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n  //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n//c1c6estimatepercore\r\n//start idle_core_savings_opportunity_estimated_last\r\n\r\n//idle core\r\nt1 =\r\n    from(bucket:\"intel\")\r\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n          |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu != \"cpu-total\")\r\n          |> group(columns: [\"host\",\"cpu\"])\r\n          |> mean()\r\n          |> filter(fn: (r) => r[\"_value\"] > 98.00)\r\n\r\nt2 =\r\n     from(bucket:\"intel\")\r\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n          |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu != \"cpu-total\")\r\n          |> group(columns: [\"host\",\"cpu\"])\r\n          |> min()\r\n          |> filter(fn: (r) => r[\"_value\"] > 95.00)\r\n        \r\nidlehost = union(tables: [t1, t2])\r\n |> map(fn: (r) => ({r with cpu: strings.replace(v: r.cpu, t: \"cpu\", u: \"\", i: 1)}))\r\n |> group()\r\n |> tableFind(fn: (key) => true)\r\n |> getColumn(column: \"host\")\r\n\r\nidlecpu = union(tables: [t1, t2])\r\n |> map(fn: (r) => ({r with cpu: strings.replace(v: r.cpu, t: \"cpu\", u: \"\", i: 1)}))\r\n |> group()\r\n |> tableFind(fn: (key) => true)\r\n |> getColumn(column: \"cpu\")\r\n\r\n//sum idle c1c6\r\nc1c6sum = c1c6estimatepercore\r\n|> filter(fn: (r) => contains(value: r.host, set: idlehost))\r\n|> filter(fn: (r) => contains(value: r.cpu_id, set: idlecpu))\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n|> sum()\r\n|> group()\r\n//all sum times 0.65\r\n|> map(fn: (r) => ({host:r.host,cpu_id: r.cpu_id, package_id: r.package_id, _value:r._value * 0.65 , _time: r._time, _start: r._start, _stop:r._stop }))\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n//|> sum()\r\n//|> group()\r\n\r\n//sum idle c1\r\nc1sum = c1estimatepercore\r\n|> filter(fn: (r) => contains(value: r.host, set: idlehost))\r\n|> filter(fn: (r) => contains(value: r.cpu_id, set: idlecpu))\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n|> sum()\r\n|> group()\r\n//all sum times 0.25\r\n|> map(fn: (r) => ({host:r.host,cpu_id: r.cpu_id, package_id: r.package_id, _value:r._value * 0.25 , _time: r._time, _start: r._start, _stop:r._stop }))\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n//|> sum()\r\n//|> group()\r\n\r\n//start idle_core_savings_opportunity_estimated_last final table\r\nidlecoresavingsopportunity = join.time(\r\n    left: c1c6sum,\r\n    right: c1sum,\r\n    as: (l, r) => ({l with _value: l._value + r._value}),\r\n)\r\n//|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n//|> sum()\r\n |> group(columns: [\"_time\"])\r\n |> sum(column: \"_value\")\r\n |> group()\r\n\r\nidlecoresavingsopportunity\r\n\r\n\r\n",
+          "refId": "A"
+        }
+      ],
+      "title": "Estimated energy savings from putting cores to C6 (last 24h)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": null
+      },
+      "description": "*Estimated annual energy savings from putting cores to C6*",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 4,
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "kwatth"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 5,
+        "x": 19,
+        "y": 21
+      },
+      "hideTimeOverride": false,
+      "id": 41,
+      "interval": "",
+      "links": [],
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.3.6",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": null
+          },
+          "query": "import \"strings\"\r\nimport \"join\"\r\n\r\n//prometheus rules = detailed_per_core_watts_estimate\r\n\r\nestimatedsavedfrequency = from(bucket: \"intel\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_core_cpu_frequency_mhz\")\r\n |> sort(columns: [\"_time\"])\r\n |> group()\r\n //evrything is times 0.6\r\n |> map(fn: (r) => ({host:r.host,cpu_id: r.cpu_id, package_id: r.package_id, _value:r._value * 0.6 , _time: r._time, _start: r._start, _stop:r._stop }))\r\n |> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n //|>count()\r\n\r\n  totalfrequencybypackage = from(bucket: \"intel\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_core_cpu_frequency_mhz\")\r\n |> sort(columns: [\"_time\"])\r\n |> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n\r\n estimatepercent = join.time(\r\n    left: estimatedsavedfrequency,\r\n    right: totalfrequencybypackage,\r\n    as: (l, r) => ({l with _value: l._value / r._value}),\r\n)\r\n\r\ntotalpowerbypackage = from(bucket: \"intel\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_package_current_power_consumption_watts\") \r\n |> sort(columns: [\"_time\"])\r\n |> map(fn: (r) => ({cpu_id:\"0\",host: r.host,package_id:r.package_id, _value: r._value, _time: r._time, _start: r._start, _stop:r._stop }))\r\n |> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n\r\n //detailed_per_core_watts_estimate final table\r\n\r\nestimatewatts = join.time(\r\n    left: estimatepercent,\r\n    right: totalpowerbypackage,\r\n    as: (l, r) => ({l with _value: l._value * r._value, cpu_id: l.cpu_id}),\r\n)\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n//estimatewatts\r\n//detailed_per_core_c1_state_watts_estimate\r\n\r\nc1Residency = from(bucket: \"intel\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_core_cpu_c1_state_residency_percent\")\r\n |> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n  //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n //c1Residency\r\n\r\n//detailed_per_core_c1_state_watts_estimate final table\r\nc1estimatepercore = join.time(\r\n    left: c1Residency,\r\n    right: estimatewatts,\r\n    as: (l, r) => ({l with _value: (l._value * r._value) / 100.00}),\r\n)\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n\r\n//detailed_per_core_non_c1_c6_state_watts_estimate\r\n\r\nc6Residency = from(bucket: \"intel\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_core_cpu_c6_state_residency_percent\")\r\n |> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n  //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n\r\n c1c6Residency = join.time(\r\n    left: c1Residency,\r\n    right: c6Residency,\r\n    as: (l, r) => ({l with _value: 100.00 - (r._value + l._value)}),\r\n)\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n  //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n\r\n\r\n//detailed_per_core_non_c1_c6_state_watts_estimate final table\r\nc1c6estimatepercore = join.time(\r\n    left: c1c6Residency,\r\n    right: estimatewatts,\r\n    as: (l, r) => ({l with _value: (l._value * r._value) / 100.00}),\r\n)\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n  //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n//c1c6estimatepercore\r\n//start idle_core_savings_opportunity_estimated_last\r\n\r\n//idle core\r\nt1 =\r\n    from(bucket:\"intel\")\r\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n          |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu != \"cpu-total\")\r\n          |> group(columns: [\"host\",\"cpu\"])\r\n          |> mean()\r\n          |> filter(fn: (r) => r[\"_value\"] > 98.00)\r\n\r\nt2 =\r\n     from(bucket:\"intel\")\r\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n          |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu != \"cpu-total\")\r\n          |> group(columns: [\"host\",\"cpu\"])\r\n          |> min()\r\n          |> filter(fn: (r) => r[\"_value\"] > 95.00)\r\n        \r\nidlehost = union(tables: [t1, t2])\r\n |> map(fn: (r) => ({r with cpu: strings.replace(v: r.cpu, t: \"cpu\", u: \"\", i: 1)}))\r\n |> group()\r\n |> tableFind(fn: (key) => true)\r\n |> getColumn(column: \"host\")\r\n\r\nidlecpu = union(tables: [t1, t2])\r\n |> map(fn: (r) => ({r with cpu: strings.replace(v: r.cpu, t: \"cpu\", u: \"\", i: 1)}))\r\n |> group()\r\n |> tableFind(fn: (key) => true)\r\n |> getColumn(column: \"cpu\")\r\n\r\n//sum idle c1c6\r\nc1c6sum = c1c6estimatepercore\r\n|> filter(fn: (r) => contains(value: r.host, set: idlehost))\r\n|> filter(fn: (r) => contains(value: r.cpu_id, set: idlecpu))\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n|> sum()\r\n|> group()\r\n//all sum times 0.65\r\n|> map(fn: (r) => ({host:r.host,cpu_id: r.cpu_id, package_id: r.package_id, _value:r._value * 0.65 , _time: r._time, _start: r._start, _stop:r._stop }))\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n//|> sum()\r\n//|> group()\r\n\r\n//sum idle c1\r\nc1sum = c1estimatepercore\r\n|> filter(fn: (r) => contains(value: r.host, set: idlehost))\r\n|> filter(fn: (r) => contains(value: r.cpu_id, set: idlecpu))\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n|> sum()\r\n|> group()\r\n//all sum times 0.25\r\n|> map(fn: (r) => ({host:r.host,cpu_id: r.cpu_id, package_id: r.package_id, _value:r._value * 0.25 , _time: r._time, _start: r._start, _stop:r._stop }))\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n//|> sum()\r\n//|> group()\r\n\r\n//start idle_core_savings_opportunity_estimated_last final table\r\nidlecoresavingsopportunity = join.time(\r\n    left: c1c6sum,\r\n    right: c1sum,\r\n    as: (l, r) => ({l with _value: l._value + r._value}),\r\n)\r\n//|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n//|> sum()\r\n |> group(columns: [\"_time\"])\r\n |> sum(column: \"_value\")\r\n |> group()\r\n\r\nidlecoresavingsopportunity\r\n\r\n\r\n",
+          "refId": "A"
+        }
+      ],
+      "title": "Estimated annual energy savings from putting cores to C6",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "datasource": {
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 24
+      },
+      "id": 39,
+      "panels": [],
+      "targets": [
+        {
+          "datasource": {
+            "uid": "prometheus"
+          },
+          "refId": "A"
+        }
+      ],
+      "title": "Environmental and financial cost of CPUs energy",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": null
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "kwatth"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 25
+      },
+      "id": 26,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.3.6",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": null
+          },
+          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_package_current_power_consumption_watts\")\r\n  |> group()\r\n  |> aggregateWindow(every: 1h, fn: sum)\r\n  |> map(fn: (r) => ({_value: (r._value / 1000.00) * 24.00 , _time: r._time, _start: r._start, _stop:r._stop }))",
+          "refId": "A"
+        }
+      ],
+      "title": "kWh consumed in the last 24 hours",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": null
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "currencyUSD"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 4,
+        "y": 25
+      },
+      "id": 29,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.3.6",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": null
+          },
+          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_package_current_power_consumption_watts\")\r\n  |> group()\r\n  |> aggregateWindow(every: 1h, fn: sum)\r\n  |> map(fn: (r) => ({_value: ((r._value / 1000.00) * 24.00) * ${kWh_price} , _time: r._time, _start: r._start, _stop:r._stop }))",
+          "refId": "A"
+        }
+      ],
+      "title": "Energy cost of the last 24 hours",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": null
+      },
+      "description": "Pounds/kWh factor from UK government statistical-data-sets, \"Annual domestic energy price statistics\" for 2020",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "currencyUSD"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 9,
+        "y": 25
+      },
+      "id": 34,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.3.6",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": null
+          },
+          "query": "import \"strings\"\r\nimport \"join\"\r\n\r\n//prometheus rules = detailed_per_core_watts_estimate\r\n\r\nestimatedsavedfrequency = from(bucket: \"intel\")\r\n |>range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_core_cpu_frequency_mhz\")\r\n |> sort(columns: [\"_time\"])\r\n |> group()\r\n //evrything is times 0.6\r\n |> map(fn: (r) => ({host:r.host,cpu_id: r.cpu_id, package_id: r.package_id, _value:r._value * 0.6 , _time: r._time, _start: r._start, _stop:r._stop }))\r\n |> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n //|>count()\r\n\r\n  totalfrequencybypackage = from(bucket: \"intel\")\r\n |>range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_core_cpu_frequency_mhz\")\r\n |> sort(columns: [\"_time\"])\r\n |> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n\r\n estimatepercent = join.time(\r\n    left: estimatedsavedfrequency,\r\n    right: totalfrequencybypackage,\r\n    as: (l, r) => ({l with _value: l._value / r._value}),\r\n)\r\n\r\ntotalpowerbypackage = from(bucket: \"intel\")\r\n |>range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_package_current_power_consumption_watts\") \r\n |> sort(columns: [\"_time\"])\r\n |> map(fn: (r) => ({cpu_id:\"0\",host: r.host,package_id:r.package_id, _value: r._value, _time: r._time, _start: r._start, _stop:r._stop }))\r\n |> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n\r\n //detailed_per_core_watts_estimate final table\r\n\r\nestimatewatts = join.time(\r\n    left: estimatepercent,\r\n    right: totalpowerbypackage,\r\n    as: (l, r) => ({l with _value: l._value * r._value, cpu_id: l.cpu_id}),\r\n)\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n//estimatewatts\r\n//detailed_per_core_c1_state_watts_estimate\r\n\r\nc1Residency = from(bucket: \"intel\")\r\n |>range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_core_cpu_c1_state_residency_percent\")\r\n |> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n  //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n //c1Residency\r\n\r\n//detailed_per_core_c1_state_watts_estimate final table\r\nc1estimatepercore = join.time(\r\n    left: c1Residency,\r\n    right: estimatewatts,\r\n    as: (l, r) => ({l with _value: (l._value * r._value) / 100.00}),\r\n)\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n\r\n//detailed_per_core_non_c1_c6_state_watts_estimate\r\n\r\nc6Residency = from(bucket: \"intel\")\r\n |>range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_core_cpu_c6_state_residency_percent\")\r\n |> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n  //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n\r\n c1c6Residency = join.time(\r\n    left: c1Residency,\r\n    right: c6Residency,\r\n    as: (l, r) => ({l with _value: 100.00 - (r._value + l._value)}),\r\n)\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n  //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n\r\n\r\n//detailed_per_core_non_c1_c6_state_watts_estimate final table\r\nc1c6estimatepercore = join.time(\r\n    left: c1c6Residency,\r\n    right: estimatewatts,\r\n    as: (l, r) => ({l with _value: (l._value * r._value) / 100.00}),\r\n)\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n  //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n//c1c6estimatepercore\r\n//start idle_core_savings_opportunity_estimated_last\r\n\r\n//idle core\r\nt1 =\r\n    from(bucket:\"intel\")\r\n          |>range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n          |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu != \"cpu-total\")\r\n          |> group(columns: [\"host\",\"cpu\"])\r\n          |> mean()\r\n          |> filter(fn: (r) => r[\"_value\"] > 98.00)\r\n\r\nt2 =\r\n     from(bucket:\"intel\")\r\n          |>range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n          |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu != \"cpu-total\")\r\n          |> group(columns: [\"host\",\"cpu\"])\r\n          |> min()\r\n          |> filter(fn: (r) => r[\"_value\"] > 95.00)\r\n        \r\nidlehost = union(tables: [t1, t2])\r\n |> map(fn: (r) => ({r with cpu: strings.replace(v: r.cpu, t: \"cpu\", u: \"\", i: 1)}))\r\n |> group()\r\n |> tableFind(fn: (key) => true)\r\n |> getColumn(column: \"host\")\r\n\r\nidlecpu = union(tables: [t1, t2])\r\n |> map(fn: (r) => ({r with cpu: strings.replace(v: r.cpu, t: \"cpu\", u: \"\", i: 1)}))\r\n |> group()\r\n |> tableFind(fn: (key) => true)\r\n |> getColumn(column: \"cpu\")\r\n\r\n//sum idle c1c6\r\nc1c6sum = c1c6estimatepercore\r\n|> filter(fn: (r) => contains(value: r.host, set: idlehost))\r\n|> filter(fn: (r) => contains(value: r.cpu_id, set: idlecpu))\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n|> sum()\r\n|> group()\r\n//all sum times 0.65\r\n|> map(fn: (r) => ({host:r.host,cpu_id: r.cpu_id, package_id: r.package_id, _value:r._value * 0.65 , _time: r._time, _start: r._start, _stop:r._stop }))\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n//|> sum()\r\n//|> group()\r\n\r\n//sum idle c1\r\nc1sum = c1estimatepercore\r\n|> filter(fn: (r) => contains(value: r.host, set: idlehost))\r\n|> filter(fn: (r) => contains(value: r.cpu_id, set: idlecpu))\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n|> sum()\r\n|> group()\r\n//all sum times 0.25\r\n|> map(fn: (r) => ({host:r.host,cpu_id: r.cpu_id, package_id: r.package_id, _value:r._value * 0.25 , _time: r._time, _start: r._start, _stop:r._stop }))\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n//|> sum()\r\n//|> group()\r\n\r\n//start idle_core_savings_opportunity_estimated_last final table\r\nidlecoresavingsopportunity = join.time(\r\n    left: c1c6sum,\r\n    right: c1sum,\r\n    as: (l, r) => ({l with _value: l._value + r._value}),\r\n)\r\n//|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n//|> sum()\r\n //|> group(columns: [\"_time\"])\r\n //|> sum(column: \"_value\")\r\n //|> group()\r\n\r\nidlecoresavingsopportunity\r\n|> group(columns: [\"_time\"])\r\n|> sum()\r\n|> group()\r\n|> map(fn: (r) => ({host: r.host,package_id:r.package_id, _value: r._value  * ${kWh_price}, _time: r._time, _start: r._start, _stop:r._stop }))\r\n\r\n\r\n",
+          "refId": "A"
+        }
+      ],
+      "title": "Estimated cost savings from putting cores to C6 (last 24h)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": null
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "semi-dark-red"
+              }
+            ]
+          },
+          "unit": "masskg"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 14,
+        "y": 25
+      },
+      "id": 30,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.3.6",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": null
+          },
+          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_package_current_power_consumption_watts\")\r\n  |> group()\r\n  |> aggregateWindow(every: 1h, fn: sum)\r\n  |> map(fn: (r) => ({_value: ((r._value / 1000.00) * 24.00) * ${co2factor} , _time: r._time, _start: r._start, _stop:r._stop }))",
+          "refId": "A"
+        }
+      ],
+      "title": "Estimated CO2 emissions (24h)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": null
+      },
+      "description": "*Estimated CO2 emissions savings from putting cores to C6 (last 24h)*\n\nCO2/kWh factor from UK government webpage, \"Greenhouse gas reporting: conversion factors 2021\"",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          },
+          "unit": "masskg"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 19,
+        "y": 25
+      },
+      "id": 32,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.3.6",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": null
+          },
+          "query": "import \"strings\"\r\nimport \"join\"\r\n\r\n//prometheus rules = detailed_per_core_watts_estimate\r\n\r\nestimatedsavedfrequency = from(bucket: \"intel\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_core_cpu_frequency_mhz\")\r\n |> sort(columns: [\"_time\"])\r\n |> group()\r\n //evrything is times 0.6\r\n |> map(fn: (r) => ({host:r.host,cpu_id: r.cpu_id, package_id: r.package_id, _value:r._value * 0.6 , _time: r._time, _start: r._start, _stop:r._stop }))\r\n |> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n //|>count()\r\n\r\n  totalfrequencybypackage = from(bucket: \"intel\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_core_cpu_frequency_mhz\")\r\n |> sort(columns: [\"_time\"])\r\n |> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n\r\n estimatepercent = join.time(\r\n    left: estimatedsavedfrequency,\r\n    right: totalfrequencybypackage,\r\n    as: (l, r) => ({l with _value: l._value / r._value}),\r\n)\r\n\r\ntotalpowerbypackage = from(bucket: \"intel\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_package_current_power_consumption_watts\") \r\n |> sort(columns: [\"_time\"])\r\n |> map(fn: (r) => ({cpu_id:\"0\",host: r.host,package_id:r.package_id, _value: r._value, _time: r._time, _start: r._start, _stop:r._stop }))\r\n |> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n\r\n //detailed_per_core_watts_estimate final table\r\n\r\nestimatewatts = join.time(\r\n    left: estimatepercent,\r\n    right: totalpowerbypackage,\r\n    as: (l, r) => ({l with _value: l._value * r._value, cpu_id: l.cpu_id}),\r\n)\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n//estimatewatts\r\n//detailed_per_core_c1_state_watts_estimate\r\n\r\nc1Residency = from(bucket: \"intel\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_core_cpu_c1_state_residency_percent\")\r\n |> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n  //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n //c1Residency\r\n\r\n//detailed_per_core_c1_state_watts_estimate final table\r\nc1estimatepercore = join.time(\r\n    left: c1Residency,\r\n    right: estimatewatts,\r\n    as: (l, r) => ({l with _value: (l._value * r._value) / 100.00}),\r\n)\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n\r\n//detailed_per_core_non_c1_c6_state_watts_estimate\r\n\r\nc6Residency = from(bucket: \"intel\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_core_cpu_c6_state_residency_percent\")\r\n |> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n  //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n\r\n c1c6Residency = join.time(\r\n    left: c1Residency,\r\n    right: c6Residency,\r\n    as: (l, r) => ({l with _value: 100.00 - (r._value + l._value)}),\r\n)\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n  //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n\r\n\r\n//detailed_per_core_non_c1_c6_state_watts_estimate final table\r\nc1c6estimatepercore = join.time(\r\n    left: c1c6Residency,\r\n    right: estimatewatts,\r\n    as: (l, r) => ({l with _value: (l._value * r._value) / 100.00}),\r\n)\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n  //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n//c1c6estimatepercore\r\n//start idle_core_savings_opportunity_estimated_last\r\n\r\n//idle core\r\nt1 =\r\n    from(bucket:\"intel\")\r\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n          |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu != \"cpu-total\")\r\n          |> group(columns: [\"host\",\"cpu\"])\r\n          |> mean()\r\n          |> filter(fn: (r) => r[\"_value\"] > 98.00)\r\n\r\nt2 =\r\n     from(bucket:\"intel\")\r\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n          |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu != \"cpu-total\")\r\n          |> group(columns: [\"host\",\"cpu\"])\r\n          |> min()\r\n          |> filter(fn: (r) => r[\"_value\"] > 95.00)\r\n        \r\nidlehost = union(tables: [t1, t2])\r\n |> map(fn: (r) => ({r with cpu: strings.replace(v: r.cpu, t: \"cpu\", u: \"\", i: 1)}))\r\n |> group()\r\n |> tableFind(fn: (key) => true)\r\n |> getColumn(column: \"host\")\r\n\r\nidlecpu = union(tables: [t1, t2])\r\n |> map(fn: (r) => ({r with cpu: strings.replace(v: r.cpu, t: \"cpu\", u: \"\", i: 1)}))\r\n |> group()\r\n |> tableFind(fn: (key) => true)\r\n |> getColumn(column: \"cpu\")\r\n\r\n//sum idle c1c6\r\nc1c6sum = c1c6estimatepercore\r\n|> filter(fn: (r) => contains(value: r.host, set: idlehost))\r\n|> filter(fn: (r) => contains(value: r.cpu_id, set: idlecpu))\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n|> sum()\r\n|> group()\r\n//all sum times 0.65\r\n|> map(fn: (r) => ({host:r.host,cpu_id: r.cpu_id, package_id: r.package_id, _value:r._value * 0.65 , _time: r._time, _start: r._start, _stop:r._stop }))\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n//|> sum()\r\n//|> group()\r\n\r\n//sum idle c1\r\nc1sum = c1estimatepercore\r\n|> filter(fn: (r) => contains(value: r.host, set: idlehost))\r\n|> filter(fn: (r) => contains(value: r.cpu_id, set: idlecpu))\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n|> sum()\r\n|> group()\r\n//all sum times 0.25\r\n|> map(fn: (r) => ({host:r.host,cpu_id: r.cpu_id, package_id: r.package_id, _value:r._value * 0.25 , _time: r._time, _start: r._start, _stop:r._stop }))\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n//|> sum()\r\n//|> group()\r\n\r\n//start idle_core_savings_opportunity_estimated_last final table\r\nidlecoresavingsopportunity = join.time(\r\n    left: c1c6sum,\r\n    right: c1sum,\r\n    as: (l, r) => ({l with _value: l._value + r._value}),\r\n)\r\n//|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n//|> sum()\r\n //|> group(columns: [\"_time\"])\r\n //|> sum(column: \"_value\")\r\n //|> group()\r\n\r\nidlecoresavingsopportunity\r\n|> group(columns: [\"_time\"])\r\n|> sum()\r\n|> group()\r\n|> map(fn: (r) => ({host: r.host,package_id:r.package_id, _value: r._value  * ${co2factor}, _time: r._time, _start: r._start, _stop:r._stop }))\r\n\r\n\r\n",
+          "refId": "A"
+        }
+      ],
+      "title": "Estimated CO2 emissions savings from putting cores to C6 (last 24h)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": null
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "kwatth"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 29
+      },
+      "id": 27,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.3.6",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": null
+          },
+          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_package_current_power_consumption_watts\")\r\n  |> group()\r\n  |> aggregateWindow(every: 1h, fn: sum)\r\n  |> map(fn: (r) => ({_value: ((r._value / 1000.00) * 24.00) * 365.00 , _time: r._time, _start: r._start, _stop:r._stop }))",
+          "refId": "A"
+        }
+      ],
+      "title": "Estimated annual energy consumption",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": null
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "currencyUSD"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 4,
+        "y": 29
+      },
+      "id": 28,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.3.6",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": null
+          },
+          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_package_current_power_consumption_watts\")\r\n  |> group()\r\n  |> aggregateWindow(every: 1h, fn: sum)\r\n  |> map(fn: (r) => ({_value: (((r._value / 1000.00) * 24.00) * 365.00) * ${kWh_price} , _time: r._time, _start: r._start, _stop:r._stop }))",
+          "refId": "A"
+        }
+      ],
+      "title": "Estimated annual energy cost",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": null
+      },
+      "description": "Pounds/kWh factor from UK government statistical-data-sets, \"Annual domestic energy price statistics\" for 2020",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "currencyUSD"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 9,
+        "y": 29
+      },
+      "id": 35,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.3.6",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": null
+          },
+          "query": "import \"strings\"\r\nimport \"join\"\r\n\r\n//prometheus rules = detailed_per_core_watts_estimate\r\n\r\nestimatedsavedfrequency = from(bucket: \"intel\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_core_cpu_frequency_mhz\")\r\n |> sort(columns: [\"_time\"])\r\n |> group()\r\n //evrything is times 0.6\r\n |> map(fn: (r) => ({host:r.host,cpu_id: r.cpu_id, package_id: r.package_id, _value:r._value * 0.6 , _time: r._time, _start: r._start, _stop:r._stop }))\r\n |> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n //|>count()\r\n\r\n  totalfrequencybypackage = from(bucket: \"intel\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_core_cpu_frequency_mhz\")\r\n |> sort(columns: [\"_time\"])\r\n |> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n\r\n estimatepercent = join.time(\r\n    left: estimatedsavedfrequency,\r\n    right: totalfrequencybypackage,\r\n    as: (l, r) => ({l with _value: l._value / r._value}),\r\n)\r\n\r\ntotalpowerbypackage = from(bucket: \"intel\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_package_current_power_consumption_watts\") \r\n |> sort(columns: [\"_time\"])\r\n |> map(fn: (r) => ({cpu_id:\"0\",host: r.host,package_id:r.package_id, _value: r._value, _time: r._time, _start: r._start, _stop:r._stop }))\r\n |> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n\r\n //detailed_per_core_watts_estimate final table\r\n\r\nestimatewatts = join.time(\r\n    left: estimatepercent,\r\n    right: totalpowerbypackage,\r\n    as: (l, r) => ({l with _value: l._value * r._value, cpu_id: l.cpu_id}),\r\n)\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n//estimatewatts\r\n//detailed_per_core_c1_state_watts_estimate\r\n\r\nc1Residency = from(bucket: \"intel\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_core_cpu_c1_state_residency_percent\")\r\n |> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n  //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n //c1Residency\r\n\r\n//detailed_per_core_c1_state_watts_estimate final table\r\nc1estimatepercore = join.time(\r\n    left: c1Residency,\r\n    right: estimatewatts,\r\n    as: (l, r) => ({l with _value: (l._value * r._value) / 100.00}),\r\n)\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n\r\n//detailed_per_core_non_c1_c6_state_watts_estimate\r\n\r\nc6Residency = from(bucket: \"intel\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_core_cpu_c6_state_residency_percent\")\r\n |> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n  //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n\r\n c1c6Residency = join.time(\r\n    left: c1Residency,\r\n    right: c6Residency,\r\n    as: (l, r) => ({l with _value: 100.00 - (r._value + l._value)}),\r\n)\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n  //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n\r\n\r\n//detailed_per_core_non_c1_c6_state_watts_estimate final table\r\nc1c6estimatepercore = join.time(\r\n    left: c1c6Residency,\r\n    right: estimatewatts,\r\n    as: (l, r) => ({l with _value: (l._value * r._value) / 100.00}),\r\n)\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n  //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n//c1c6estimatepercore\r\n//start idle_core_savings_opportunity_estimated_last\r\n\r\n//idle core\r\nt1 =\r\n    from(bucket:\"intel\")\r\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n          |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu != \"cpu-total\")\r\n          |> group(columns: [\"host\",\"cpu\"])\r\n          |> mean()\r\n          |> filter(fn: (r) => r[\"_value\"] > 98.00)\r\n\r\nt2 =\r\n     from(bucket:\"intel\")\r\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n          |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu != \"cpu-total\")\r\n          |> group(columns: [\"host\",\"cpu\"])\r\n          |> min()\r\n          |> filter(fn: (r) => r[\"_value\"] > 95.00)\r\n        \r\nidlehost = union(tables: [t1, t2])\r\n |> map(fn: (r) => ({r with cpu: strings.replace(v: r.cpu, t: \"cpu\", u: \"\", i: 1)}))\r\n |> group()\r\n |> tableFind(fn: (key) => true)\r\n |> getColumn(column: \"host\")\r\n\r\nidlecpu = union(tables: [t1, t2])\r\n |> map(fn: (r) => ({r with cpu: strings.replace(v: r.cpu, t: \"cpu\", u: \"\", i: 1)}))\r\n |> group()\r\n |> tableFind(fn: (key) => true)\r\n |> getColumn(column: \"cpu\")\r\n\r\n//sum idle c1c6\r\nc1c6sum = c1c6estimatepercore\r\n|> filter(fn: (r) => contains(value: r.host, set: idlehost))\r\n|> filter(fn: (r) => contains(value: r.cpu_id, set: idlecpu))\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n|> sum()\r\n|> group()\r\n//all sum times 0.65\r\n|> map(fn: (r) => ({host:r.host,cpu_id: r.cpu_id, package_id: r.package_id, _value:r._value * 0.65 , _time: r._time, _start: r._start, _stop:r._stop }))\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n//|> sum()\r\n//|> group()\r\n\r\n//sum idle c1\r\nc1sum = c1estimatepercore\r\n|> filter(fn: (r) => contains(value: r.host, set: idlehost))\r\n|> filter(fn: (r) => contains(value: r.cpu_id, set: idlecpu))\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n|> sum()\r\n|> group()\r\n//all sum times 0.25\r\n|> map(fn: (r) => ({host:r.host,cpu_id: r.cpu_id, package_id: r.package_id, _value:r._value * 0.25 , _time: r._time, _start: r._start, _stop:r._stop }))\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n//|> sum()\r\n//|> group()\r\n\r\n//start idle_core_savings_opportunity_estimated_last final table\r\nidlecoresavingsopportunity = join.time(\r\n    left: c1c6sum,\r\n    right: c1sum,\r\n    as: (l, r) => ({l with _value: l._value + r._value}),\r\n)\r\n//|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n//|> sum()\r\n //|> group(columns: [\"_time\"])\r\n //|> sum(column: \"_value\")\r\n //|> group()\r\n\r\nidlecoresavingsopportunity\r\n|> group(columns: [\"_time\"])\r\n|> sum()\r\n|> group()\r\n|> map(fn: (r) => ({host: r.host,package_id:r.package_id, _value: r._value  * ${kWh_price}, _time: r._time, _start: r._start, _stop:r._stop }))\r\n\r\n\r\n",
+          "refId": "A"
+        }
+      ],
+      "title": "Estimated annual cost savings from putting cores to C6",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": null
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "semi-dark-red"
+              }
+            ]
+          },
+          "unit": "masskg"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 14,
+        "y": 29
+      },
+      "id": 31,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.3.6",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": null
+          },
+          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_package_current_power_consumption_watts\")\r\n  |> group()\r\n  |> aggregateWindow(every: 1h, fn: sum)\r\n  |> map(fn: (r) => ({_value: (((r._value / 1000.00) * 24.00) * 365.00) * ${co2factor} , _time: r._time, _start: r._start, _stop:r._stop }))",
+          "refId": "A"
+        }
+      ],
+      "title": "Estimated annual CO2 emissions",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": null
+      },
+      "description": "*Estimated annual CO2 emissions savings from putting cores to C6*\n\nCO2/kWh factor from UK government webpage, \"Greenhouse gas reporting: conversion factors 2021\"",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          },
+          "unit": "masskg"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 19,
+        "y": 29
+      },
+      "id": 33,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.3.6",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": null
+          },
+          "query": "import \"strings\"\r\nimport \"join\"\r\n\r\n//prometheus rules = detailed_per_core_watts_estimate\r\n\r\nestimatedsavedfrequency = from(bucket: \"intel\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_core_cpu_frequency_mhz\")\r\n |> sort(columns: [\"_time\"])\r\n |> group()\r\n //evrything is times 0.6\r\n |> map(fn: (r) => ({host:r.host,cpu_id: r.cpu_id, package_id: r.package_id, _value:r._value * 0.6 , _time: r._time, _start: r._start, _stop:r._stop }))\r\n |> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n //|>count()\r\n\r\n  totalfrequencybypackage = from(bucket: \"intel\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_core_cpu_frequency_mhz\")\r\n |> sort(columns: [\"_time\"])\r\n |> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n\r\n estimatepercent = join.time(\r\n    left: estimatedsavedfrequency,\r\n    right: totalfrequencybypackage,\r\n    as: (l, r) => ({l with _value: l._value / r._value}),\r\n)\r\n\r\ntotalpowerbypackage = from(bucket: \"intel\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_package_current_power_consumption_watts\") \r\n |> sort(columns: [\"_time\"])\r\n |> map(fn: (r) => ({cpu_id:\"0\",host: r.host,package_id:r.package_id, _value: r._value, _time: r._time, _start: r._start, _stop:r._stop }))\r\n |> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n\r\n //detailed_per_core_watts_estimate final table\r\n\r\nestimatewatts = join.time(\r\n    left: estimatepercent,\r\n    right: totalpowerbypackage,\r\n    as: (l, r) => ({l with _value: l._value * r._value, cpu_id: l.cpu_id}),\r\n)\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n//estimatewatts\r\n//detailed_per_core_c1_state_watts_estimate\r\n\r\nc1Residency = from(bucket: \"intel\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_core_cpu_c1_state_residency_percent\")\r\n |> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n  //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n //c1Residency\r\n\r\n//detailed_per_core_c1_state_watts_estimate final table\r\nc1estimatepercore = join.time(\r\n    left: c1Residency,\r\n    right: estimatewatts,\r\n    as: (l, r) => ({l with _value: (l._value * r._value) / 100.00}),\r\n)\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n\r\n//detailed_per_core_non_c1_c6_state_watts_estimate\r\n\r\nc6Residency = from(bucket: \"intel\")\r\n |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_core_cpu_c6_state_residency_percent\")\r\n |> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n  //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n\r\n c1c6Residency = join.time(\r\n    left: c1Residency,\r\n    right: c6Residency,\r\n    as: (l, r) => ({l with _value: 100.00 - (r._value + l._value)}),\r\n)\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n  //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n\r\n\r\n//detailed_per_core_non_c1_c6_state_watts_estimate final table\r\nc1c6estimatepercore = join.time(\r\n    left: c1c6Residency,\r\n    right: estimatewatts,\r\n    as: (l, r) => ({l with _value: (l._value * r._value) / 100.00}),\r\n)\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n  //sum all identical readings based on group\r\n //|> sum()\r\n //|> group()\r\n//c1c6estimatepercore\r\n//start idle_core_savings_opportunity_estimated_last\r\n\r\n//idle core\r\nt1 =\r\n    from(bucket:\"intel\")\r\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n          |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu != \"cpu-total\")\r\n          |> group(columns: [\"host\",\"cpu\"])\r\n          |> mean()\r\n          |> filter(fn: (r) => r[\"_value\"] > 98.00)\r\n\r\nt2 =\r\n     from(bucket:\"intel\")\r\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n          |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu != \"cpu-total\")\r\n          |> group(columns: [\"host\",\"cpu\"])\r\n          |> min()\r\n          |> filter(fn: (r) => r[\"_value\"] > 95.00)\r\n        \r\nidlehost = union(tables: [t1, t2])\r\n |> map(fn: (r) => ({r with cpu: strings.replace(v: r.cpu, t: \"cpu\", u: \"\", i: 1)}))\r\n |> group()\r\n |> tableFind(fn: (key) => true)\r\n |> getColumn(column: \"host\")\r\n\r\nidlecpu = union(tables: [t1, t2])\r\n |> map(fn: (r) => ({r with cpu: strings.replace(v: r.cpu, t: \"cpu\", u: \"\", i: 1)}))\r\n |> group()\r\n |> tableFind(fn: (key) => true)\r\n |> getColumn(column: \"cpu\")\r\n\r\n//sum idle c1c6\r\nc1c6sum = c1c6estimatepercore\r\n|> filter(fn: (r) => contains(value: r.host, set: idlehost))\r\n|> filter(fn: (r) => contains(value: r.cpu_id, set: idlecpu))\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n|> sum()\r\n|> group()\r\n//all sum times 0.65\r\n|> map(fn: (r) => ({host:r.host,cpu_id: r.cpu_id, package_id: r.package_id, _value:r._value * 0.65 , _time: r._time, _start: r._start, _stop:r._stop }))\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n//|> sum()\r\n//|> group()\r\n\r\n//sum idle c1\r\nc1sum = c1estimatepercore\r\n|> filter(fn: (r) => contains(value: r.host, set: idlehost))\r\n|> filter(fn: (r) => contains(value: r.cpu_id, set: idlecpu))\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n|> sum()\r\n|> group()\r\n//all sum times 0.25\r\n|> map(fn: (r) => ({host:r.host,cpu_id: r.cpu_id, package_id: r.package_id, _value:r._value * 0.25 , _time: r._time, _start: r._start, _stop:r._stop }))\r\n|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n//|> sum()\r\n//|> group()\r\n\r\n//start idle_core_savings_opportunity_estimated_last final table\r\nidlecoresavingsopportunity = join.time(\r\n    left: c1c6sum,\r\n    right: c1sum,\r\n    as: (l, r) => ({l with _value: l._value + r._value}),\r\n)\r\n//|> group(columns: [\"_time\",\"host\",\"cpu_id\",\"package_id\",\"_start\",\"_stop\"])\r\n//|> sum()\r\n //|> group(columns: [\"_time\"])\r\n //|> sum(column: \"_value\")\r\n //|> group()\r\n\r\nidlecoresavingsopportunity\r\n|> group(columns: [\"_time\"])\r\n|> sum()\r\n|> group()\r\n|> map(fn: (r) => ({host: r.host,package_id:r.package_id, _value: r._value  * ${co2factor}, _time: r._time, _start: r._start, _stop:r._stop }))\r\n\r\n\r\n",
+          "refId": "A"
+        }
+      ],
+      "title": "Estimated annual CO2 emissions savings from putting cores to C6",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "datasource": {
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 33
+      },
+      "id": 61,
+      "panels": [],
+      "targets": [
+        {
+          "datasource": {
+            "uid": "prometheus"
+          },
+          "refId": "A"
+        }
+      ],
+      "title": "Cluster nodes memory savings opportunity",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": null
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "semi-dark-yellow"
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "A"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Used memory %"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 34
+      },
+      "id": 63,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": null
+          },
+          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mem_used\" or r[\"_measurement\"] == \"mem_total\")\r\n  |> sort(columns: [\"_time\"])\r\n  |>toFloat()\r\n|> pivot(rowKey: [\"_time\"], columnKey: [\"_measurement\"], valueColumn: \"_value\")\r\n|> map(fn: (r) => ({host:r.host, _value:(r.mem_used / r.mem_total) * 100.00, _time: r._time, _start: r._start, _stop:r._stop }))\r\n |>group(columns: [\"_time\"])\r\n |>sum()\r\n |>group()\r\n",
+          "refId": "A"
+        }
+      ],
+      "title": "Used memory %",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": null
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "semi-dark-blue"
+              }
+            ]
+          },
+          "unit": "decbytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 12,
+        "y": 34
+      },
+      "id": 69,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "text": {}
+      },
+      "pluginVersion": "9.3.6",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": null
+          },
+          "hide": false,
+          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mem_available\")\r\n  |> group()\r\n  |> aggregateWindow(every: 1h, fn: sum)",
+          "refId": "A"
+        }
+      ],
+      "title": "Memory not used",
+      "transformations": [
+        {
+          "id": "configFromData",
+          "options": {
+            "applyTo": {
+              "id": "byName",
+              "options": "Memory never used"
+            },
+            "configRefId": "B",
+            "mappings": [
+              {
+                "fieldName": "memory total",
+                "handlerKey": "max"
+              }
+            ]
+          }
+        },
+        {
+          "id": "reduce",
+          "options": {
+            "includeTimeField": false,
+            "mode": "reduceFields",
+            "reducers": [
+              "min"
+            ]
+          }
+        }
+      ],
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": null
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "semi-dark-red"
+              }
+            ]
+          },
+          "unit": "kwatth"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 18,
+        "y": 34
+      },
+      "id": 71,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.3.6",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": null
+          },
+          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_package_current_dram_power_consumption_watts\" or r[\"_measurement\"] == \"mem_available_percent\")\r\n  |>drop(columns: [\"package_id\"])\r\n  |> sort(columns: [\"_time\"])\r\n|> pivot(rowKey: [\"_time\"], columnKey: [\"_measurement\"], valueColumn: \"_value\")\r\n|>group()\r\n|> map(fn: (r) => ({host:r.host, _value:(r.powerstat_package_current_dram_power_consumption_watts * (r.mem_available_percent / 100.00)) * ${kWh_price} , _time: r._time, _start: r._start, _stop:r._stop }))\r\n|> aggregateWindow(every: 1h, fn: sum)\r\n|> map(fn: (r) => ({host:r.host, _value:(r._value / 1000.00), _time: r._time, _start: r._start, _stop:r._stop }))",
+          "refId": "A"
+        }
+      ],
+      "title": "Energy consumed by redundant memory",
+      "transformations": [],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": null
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "bytes",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "semi-dark-yellow"
+              }
+            ]
+          },
+          "unit": "decbytes"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#F2CC0C",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "Memory Used"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 40
+      },
+      "id": 65,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": null
+          },
+          "hide": false,
+          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mem_used\")\r\n  |> group(columns: [\"_time\"])\r\n  |> sum()\r\n  |> group()\r\n",
+          "refId": "A"
+        }
+      ],
+      "title": "Used memory total",
+      "transformations": [
+        {
+          "id": "configFromData",
+          "options": {
+            "applyTo": {
+              "id": "byName",
+              "options": "Used Memory"
+            },
+            "configRefId": "B",
+            "mappings": [
+              {
+                "fieldName": "Total memory",
+                "handlerKey": "max"
+              }
+            ]
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": null
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "semi-dark-green"
+              }
+            ]
+          },
+          "unit": "currencyUSD"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 12,
+        "y": 40
+      },
+      "id": 73,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.3.6",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": null
+          },
+          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_package_current_dram_power_consumption_watts\" or r[\"_measurement\"] == \"mem_available_percent\")\r\n  |>drop(columns: [\"package_id\"])\r\n  |> sort(columns: [\"_time\"])\r\n|> pivot(rowKey: [\"_time\"], columnKey: [\"_measurement\"], valueColumn: \"_value\")\r\n|>group()\r\n|> map(fn: (r) => ({host:r.host, _value:(r.powerstat_package_current_dram_power_consumption_watts * (r.mem_available_percent / 100.00)) * ${kWh_price} , _time: r._time, _start: r._start, _stop:r._stop }))\r\n|> aggregateWindow(every: 1h, fn: sum)\r\n|> map(fn: (r) => ({host:r.host, _value:(r._value / 1000.00) * ${kWh_price}, _time: r._time, _start: r._start, _stop:r._stop }))",
+          "refId": "A"
+        }
+      ],
+      "title": "Money spent on excess electricity",
+      "transformations": [],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": null
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "semi-dark-green"
+              }
+            ]
+          },
+          "unit": "masskg"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 18,
+        "y": 40
+      },
+      "id": 75,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.3.6",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": null
+          },
+          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_package_current_dram_power_consumption_watts\" or r[\"_measurement\"] == \"mem_available_percent\")\r\n  |>drop(columns: [\"package_id\"])\r\n  |> sort(columns: [\"_time\"])\r\n|> pivot(rowKey: [\"_time\"], columnKey: [\"_measurement\"], valueColumn: \"_value\")\r\n|>group()\r\n|> map(fn: (r) => ({host:r.host, _value:(r.powerstat_package_current_dram_power_consumption_watts * (r.mem_available_percent / 100.00)) * ${kWh_price} , _time: r._time, _start: r._start, _stop:r._stop }))\r\n|> aggregateWindow(every: 1h, fn: sum)\r\n|> map(fn: (r) => ({host:r.host, _value:(r._value / 1000.00) * ${co2factor}, _time: r._time, _start: r._start, _stop:r._stop }))",
+          "refId": "A"
+        }
+      ],
+      "title": "CO2 emitted by excess electricity",
+      "transformations": [],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": null
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -560,74 +2354,34 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
+                "color": "semi-dark-yellow"
               }
             ]
-          }
+          },
+          "unit": "watt"
         },
         "overrides": [
           {
             "matcher": {
-              "id": "byName",
-              "options": "gauge {host=\"192.168.1.107\", package_id=\"0\"}"
+              "id": "byFrameRefID",
+              "options": "A"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Node01 - Package 0"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "gauge {host=\"192.168.1.107\", package_id=\"1\"}"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Node01 - Package 1"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "gauge {host=\"192.168.1.111\", package_id=\"0\"}"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Node02 - Package 0"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "gauge {host=\"192.168.1.111\", package_id=\"1\"}"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Node02 - Package 1"
+                "value": "Watts Used By Memory"
               }
             ]
           }
         ]
       },
       "gridPos": {
-        "h": 5,
-        "w": 10,
-        "x": 14,
-        "y": 6
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 46
       },
-      "id": 12,
+      "id": 67,
       "options": {
         "legend": {
           "calcs": [],
@@ -644,118 +2398,123 @@
         {
           "datasource": {
             "type": "influxdb",
-            "uid": "P8EFB3B3375746E67"
+            "uid": null
           },
-          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_package_current_power_consumption_watts\")\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |> yield(name: \"mean\")",
+          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_package_current_dram_power_consumption_watts\")\r\n  |> group(columns: [\"_time\"])\r\n  |> sum()\r\n  |> group()\r\n",
           "refId": "A"
         }
       ],
-      "title": "Power Consumption",
+      "title": "Watts used on memory",
       "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P8EFB3B3375746E67"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "max": 100,
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 90
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "gauge {core_id=\"0\", cpu_id=\"0\", host=\"192.168.1.107\", package_id=\"0\"}"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Node 01"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "gauge {core_id=\"0\", cpu_id=\"0\", host=\"192.168.1.111\", package_id=\"0\"}"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Node 02"
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 24,
-        "x": 0,
-        "y": 11
-      },
-      "id": 14,
-      "options": {
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true
-      },
-      "pluginVersion": "9.3.8",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P8EFB3B3375746E67"
-          },
-          "query": "from(bucket:\"intel\")\r\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n          |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu != \"cpu-total\")\r\n          |> map(fn: (r) => ({r with _value: 100.0 - r._value}))\r\n",
-          "refId": "A"
-        }
-      ],
-      "title": "Utilization of each logical core",
-      "type": "gauge"
     }
   ],
-  "refresh": "5s",
+  "refresh": "",
   "schemaVersion": 37,
   "style": "dark",
   "tags": [],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "current": {
+          "selected": true,
+          "text": "0.174",
+          "value": "0.174"
+        },
+        "description": "Pounds/kWh factor from UK government statistical-data-sets, \"Annual domestic energy price statistics\" for 2020",
+        "hide": 0,
+        "label": "USD/kWh",
+        "name": "kWh_price",
+        "options": [
+          {
+            "selected": true,
+            "text": "0.174",
+            "value": "0.174"
+          }
+        ],
+        "query": "0.174",
+        "skipUrlSync": false,
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": "0.21016",
+          "value": "0.21016"
+        },
+        "description": "CO2/kWh factor from UK government webpage, \"Greenhouse gas reporting: conversion factors 2021\"",
+        "hide": 0,
+        "label": " CO2/kWh Factor",
+        "name": "co2factor",
+        "options": [
+          {
+            "selected": true,
+            "text": "0.21016",
+            "value": "0.21016"
+          }
+        ],
+        "query": "0.21016",
+        "skipUrlSync": false,
+        "type": "textbox"
+      },
+      {
+        "hide": 2,
+        "name": "scraping_interval",
+        "query": "1.00",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": "5m",
+          "value": "5m"
+        },
+        "description": "Graph Resolution",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Resolution",
+        "multi": false,
+        "name": "resolution",
+        "options": [
+          {
+            "selected": true,
+            "text": "5m",
+            "value": "5m"
+          },
+          {
+            "selected": false,
+            "text": "24h",
+            "value": "24h"
+          }
+        ],
+        "query": "5m, 24h,",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      }
+    ]
   },
   "time": {
     "from": "now-1h",
     "to": "now"
   },
-  "timepicker": {},
+  "timepicker": {
+    "refresh_intervals": [
+      "5s",
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ]
+  },
   "timezone": "",
-  "title": "Intel Demo -  Cluster Nodes",
-  "uid": "Xcxo6u14k",
-  "version": 2,
+  "title": "Cluster Power Consumption Overview",
+  "uid": "qTkfrKx4z",
+  "version": 72,
   "weekStart": ""
 }
