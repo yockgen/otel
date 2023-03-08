@@ -50,11 +50,12 @@ intel-grafana grafana/grafana
 ```
 ### Pass in datasource configuration during deployment (error, WIP)
 ```
-helm template --dry-run --debug \
+helm install \
 -f /data/otel/helm/grafana/values.yaml \
 --set adminPassword="admin" \
 --set persistence.enabled=true \
 --set persistence.storageClassName="manual" \
---set-file 'datasources.datasources\.yaml'=/data/otel/helm/grafana/config/config.yaml \
+--set-file 'datasources.datasources\.yaml.yaml'=/data/otel/helm/grafana/config/config.yaml \
+--set-file dashboards.default.power-insight-01.json=/data/otel/helm/grafana/dashboards/power-insight.json \
 intel-grafana grafana/grafana
 ```
