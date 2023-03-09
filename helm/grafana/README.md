@@ -39,7 +39,7 @@ datasources:
 
 
 
-## Example Helm Installation
+## Grafana Helm Installation examples
 
 ### Deployment without persistent storage - data wiped out after restart
 ```
