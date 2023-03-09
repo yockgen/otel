@@ -527,20 +527,19 @@ plugins: []
 ##
 datasources:
   datasources.yaml:
-    yaml: |
-#    apiVersion: 1
-#    datasources:
-#      - name: Intel_Influx
-#        type: influxdb
-#        access: proxy
-#        url: http://192.168.1.107:8086
-#        jsonData:
-#          version: Flux
-#          organization: intel
-#          defaultBucket: intel
-#          tlsSkipVerify: true
-#        secureJsonData:
-#          token: X6zYQsXQdkC4K-WE7Uza_Z7yYWkENe3PAbNPIjryr4_KECA75QoLqALgsX9XQjWMFhdhZFz1TiLjxYUiM7B1zw==
+    apiVersion: 1
+    datasources:
+      - name: Intel_Influx
+        type: influxdb
+        access: proxy
+        url: http://192.168.1.107:8086
+        jsonData:
+          version: Flux
+          organization: intel
+          defaultBucket: intel
+          tlsSkipVerify: true
+        secureJsonData:
+          token: X6zYQsXQdkC4K-WE7Uza_Z7yYWkENe3PAbNPIjryr4_KECA75QoLqALgsX9XQjWMFhdhZFz1TiLjxYUiM7B1zw==
 #    - name: Prometheus
 #      type: prometheus
 #      url: http://prometheus-prometheus-server
@@ -665,6 +664,8 @@ dashboardProviders:
 dashboards:
   default:
     power-insight-01:
+      json: |
+    intel-demo:
       json: |
   #   some-dashboard:
   #     json: |
