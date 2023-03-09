@@ -15,8 +15,7 @@ helm repo update
 cd /data/otel/helm/grafana
 nano +525 values.yaml
 ```
-
-Configured accordingly to target InfluxDB, exaple:
+3. Modify accordingly to target InfluxDB, example:
 ```
 ## Configure grafana datasources
 ## ref: http://docs.grafana.org/administration/provisioning/#datasources
