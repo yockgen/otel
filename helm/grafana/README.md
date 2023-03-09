@@ -1,4 +1,4 @@
-## Grafana Official Guide
+## Grafana Helm Chart Official Guide
 https://github.com/grafana/helm-charts/blob/main/charts/grafana/README.md
 
 ## Make Grafana Charts available in Helm 
@@ -8,12 +8,37 @@ helm repo add grafana https://grafana.github.io/helm-charts
 helm repo update
 ```
 
-## Create persistent storage if persistence.enabled=true on next step
+## Configuring InfluxDB connection
+1. Downloaded this repo, preferred stored under /data parent directory 
+2. Configuring InfluxDB connection in values.yaml
 ```
 cd /data/otel/helm/grafana
-kubectl delete -f persistent.yaml
-kubectl apply -f persistent.yaml
+nano +525 values.yaml
 ```
+
+Configured accordingly to target InfluxDB, exaple:
+```
+## Configure grafana datasources
+## ref: http://docs.grafana.org/administration/provisioning/#datasources
+##
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+      - name: Intel_Influx
+        type: influxdb
+        access: proxy
+        url: http://192.168.1.107:8086
+        jsonData:
+          version: Flux
+          organization: intel
+          defaultBucket: intel
+          tlsSkipVerify: true
+        secureJsonData:
+          token: {influxdb token for access}
+```
+
+
 
 ## Example Helm Installation
 
