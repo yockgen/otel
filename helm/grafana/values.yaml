@@ -530,6 +530,7 @@ datasources:
     apiVersion: 1
     datasources:
       - name: Intel_Influx
+        uid: P8EFB3B3375746E67
         type: influxdb
         access: proxy
         url: http://192.168.1.107:8086
