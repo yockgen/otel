@@ -15,7 +15,7 @@ helm repo update
 cd /data/otel/helm/grafana
 nano +525 values.yaml
 ```
-3. Modify accordingly to target InfluxDB, example:
+3. Modify 'url' and 'token' field according to target InfluxDB (do not change other fields), for example:
 ```
 ## Configure grafana datasources
 ## ref: http://docs.grafana.org/administration/provisioning/#datasources
@@ -24,10 +24,11 @@ datasources:
   datasources.yaml:
     apiVersion: 1
     datasources:
-      - name: Intel_Influx
+      - name: Intel_Influx   
+        uid: P8EFB3B3375746E67 
         type: influxdb
         access: proxy
-        url: http://192.168.1.107:8086
+        url: http://192.168.1.107:8086 <-- change to target InfluxDB 
         jsonData:
           version: Flux
           organization: intel
