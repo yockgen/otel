@@ -533,7 +533,9 @@ datasources:
         uid: P8EFB3B3375746E67
         type: influxdb
         access: proxy
-        url: http://192.168.1.107:8086
+        #url: http://192.168.1.107:8086
+        #url: http://10.233.34.16
+        url: http://192.168.1.107:32701
         jsonData:
           version: Flux
           organization: intel

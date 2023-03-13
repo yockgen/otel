@@ -10,7 +10,7 @@ processors:
 
 exporters:
   influxdb:
-    endpoint: http://192.168.1.107:8086
+    endpoint: http://192.168.1.107:32701
     timeout: 500ms
     org: intel
     bucket: intel
