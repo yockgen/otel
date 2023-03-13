@@ -6,7 +6,7 @@
 helm repo add influxdata https://helm.influxdata.com/
 helm repo update
 ```
-##cleanup
+## Cleanup
 ```
 helm uninstall intel-influxdb2
 ```
