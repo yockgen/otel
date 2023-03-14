@@ -27,10 +27,10 @@ Please read README in each respective directory for technical guidance.
 ## Default port number exposed in each services
 Service | Helm (via Kubernetes Node Port) | Docker-Compose
 --- | --- | ---
-*InfluxDB* | **http://{any cluster node ip}:32701** | **http://{host ip}:58100**
-*Grafana* | **http://{any cluster node ip}:32601** | **http://{host ip}:59500**
-*OpenTelemetry Gateway* | **http://{any cluster node ip}:31082** | **http://{host ip}:52199**
-*OpenTelemetry Agent* | **http://{any cluster node ip}:30695** | **http://{host ip}:52199**
+*InfluxDB* | **http://{any node ip}:32701** | **http://{host ip}:58100**
+*Grafana* | **http://{any node ip}:32601** | **http://{host ip}:59500**
+*OpenTelemetry Gateway* | **http://{any node ip}:31082** | **http://{host ip}:52199**
+*OpenTelemetry Agent* | **http://{any node ip}:30695** | **http://{host ip}:52199**
 
 
 ## How to connect Telegraf node to Telemetry Infrastructure setup
