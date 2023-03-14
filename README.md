@@ -8,11 +8,19 @@ Node::Telegraf Node-> Node::OpenTelemetry Collector Agent-> Backend::OpenTelemet
 
 
 ## Deployment Order
-Each sub-component/service, therefore,
+Some sub-components/services have interdependencies, therefore, recommended to deploy them according to order below:
 1. InfluxDB
-2. Open Telemetry Gateway
-3. Open Telemetry Agent
+   - Helm solution: ./helm/influxdb2 
+   - Docker solution: ./docker/influxdb
+2. Open Telemetry Gateway (using gateway profile)
+   - Helm solution: ./helm/otelcol
+   - Docker solution: ./docker/otel
+3. Open Telemetry Agent (using agent profile)
+   - Helm solution: ./helm/otelcol
+   - Docker solution: ./docker/ote
 4. Grafana
+   - Helm solution: ./helm/otelcol
+   - Docker solution: ./docker/otel
 
 
 ## How to connect Telemetry node to Telemetry Infra
