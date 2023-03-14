@@ -37,5 +37,5 @@ Service | Helm (via Kubernetes Node Port) | Docker-Compose
 
 ```
 [[outputs.opentelemetry]]
-  service_address  = "192.168.1.107:4317"
+  service_address  = "192.168.1.107:30695"
 ```
