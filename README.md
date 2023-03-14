@@ -24,6 +24,14 @@ Some sub-components/services have interdependencies, therefore, recommended to d
 
 Please read README in each respective directory for technical guidance.
 
+## Default port number exposed in each services
+Service | Helm (via Kubernetes Node Port) | Docker-Compose
+--- | --- | ---
+*InfluxDB* | **http://{any cluster node ip}:32701** | **http://{host ip}:58100**
+*Grafana* | **http://{any cluster node ip}:32601** | **http://{host ip}:59500**
+*OpenTelemetry Gateway* | **http://{any cluster node ip}:31082** | **http://{host ip}:52199**
+*OpenTelemetry Agent* | **http://{any cluster node ip}:30695** | **http://{host ip}:52199**
+
 
 ## How to connect Telemetry node to Telemetry Infra
 
