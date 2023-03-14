@@ -22,6 +22,8 @@ Some sub-components/services have interdependencies, therefore, recommended to d
    - Helm solution: ./helm/otelcol
    - Docker solution: ./docker/otel
 
+Please read README in each respective directory for technical guidance.
+
 
 ## How to connect Telemetry node to Telemetry Infra
 
