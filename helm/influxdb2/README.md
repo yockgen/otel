@@ -22,6 +22,6 @@ helm install \
 --set adminUser.bucket="intel" \
 --set adminUser.token="X6zYQsXQdkC4K-WE7Uza_Z7yYWkENe3PAbNPIjryr4_KECA75QoLqALgsX9XQjWMFhdhZFz1TiLjxYUiM7B1zw==" \
 --set adminUser.user="admin" \
---set adminUser.user="intel@2023" \
+--set adminUser.password="intel@2023" \
 intel-influxdb2 influxdata/influxdb2
 ```
