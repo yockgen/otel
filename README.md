@@ -24,6 +24,8 @@ Some sub-components/services have interdependencies, therefore, recommended to d
 
 Please read README in each respective directory for technical guidance.
 
+![Architecture Diagram](./telemetry.png "Architecture Diagram")
+
 ## Default port number exposed in each services
 Service | Helm (via Kubernetes Node Port) | Docker-Compose
 --- | --- | ---
