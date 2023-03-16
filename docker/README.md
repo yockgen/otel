@@ -1,3 +1,9 @@
+## Telemetry Docker
+
+### Overall architecture 
+[README](../README.md)
+
+### How to Deploy
 Backend - InfluxDB
 ```
 cd /data/otel/docker/influxdb
