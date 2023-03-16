@@ -1,6 +1,6 @@
 ## Telemetry Helm
 ### Overall architecture 
-[README](./README.md)
+[README](../README.md)
 
 
 ### How to deploy?
