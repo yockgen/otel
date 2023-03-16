@@ -5,9 +5,14 @@
  CONFIG=./config-edge-agent.yaml docker-compose up
 ```
 
-2. To Run Bakcned OtelCol Gateway with default config 
+2. To Run Backend OtelCol Gateway with default config 
  ```
  CONFIG=./config-backend-gateway-01.yaml docker-compose up
+```
+
+3. To Run Multiple OtelCol Gateways (refer next sections on setup load balancer to utlize multiple gateways)
+ ```
+ CONFIG=./config-backend-gateway-01.yaml docker-compose -f docker-compose-dual.yml up
 ```
 
 Please refer to example config files provided in this repo for reference.
