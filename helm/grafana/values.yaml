@@ -668,7 +668,7 @@ dashboards:
   default:
     power-insight-01:
       json: |
-    intel-demo:
+    cluster-node-mon-01:
       json: |
   #   some-dashboard:
   #     json: |
