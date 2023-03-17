@@ -49,7 +49,7 @@ helm install \
 --set persistence.enabled=false \
 --set persistence.storageClassName="manual" \
 --set-file dashboards.default.power-insight-01.json=/data/otel/helm/grafana/dashboards/power-insight.json \
---set-file dashboards.default.intel-demo.json=/data/otel/helm/grafana/dashboards/intel-demo.json \
+--set-file dashboards.default.cluster-node-mon-01.json=/data/otel/helm/grafana/dashboards/Cluster-Node-Monitoring.json \
 intel-grafana grafana/grafana
 ```
 
