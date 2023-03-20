@@ -1,10 +1,14 @@
 ## Telegraf for Intel i915 GPU metries
 
-1. Install intel-gpu-top utilities
+1. Install intel-gpu-tools utilities
 
 ```
+#Ubuntu
 apt-get update 
 apt-get install intel-gpu-tools
+
+#CentOS
+yum -y install intel-gpu-tools
 ```
 
 2. Added following config input into Telegraf config file:
