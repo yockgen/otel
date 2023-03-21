@@ -1,6 +1,8 @@
 #!/bin/sh
+result=$(timeout 3s intel_gpu_top -l | awk 'END{print}')
+render=$(echo $result | awk 'END{print $9}')
+blitter=$(echo $result | awk 'END{print $12}')
+video=$(echo $result | awk 'END{print $15}')
+videoEnh=$(echo $result | awk 'END{print $18}')
 
-#count=$(timeout 3s intel_gpu_top -l -o temp.json)
-#result=$(cat ./temp.json | awk 'END{print $9}')
-result=$(timeout 3s intel_gpu_top -l | awk 'END{print $9}')
-echo $result
+echo "{\"render3d\": ${render}, \"blitter\": ${blitter}, \"video\": ${video}, \"video_enhance\": ${videoEnh}}"
