@@ -24,96 +24,22 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 4,
+  "id": 5,
   "links": [],
   "liveNow": false,
   "panels": [
     {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P8EFB3B3375746E67"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "max": 100,
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "gauge {cpu=\"cpu-total\", host=\"192.168.1.107\"}"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Node01"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "gauge {cpu=\"cpu-total\", host=\"192.168.1.111\"}"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Node02"
-              }
-            ]
-          }
-        ]
-      },
+      "collapsed": false,
       "gridPos": {
-        "h": 4,
-        "w": 4,
+        "h": 1,
+        "w": 24,
         "x": 0,
         "y": 0
       },
-      "id": 8,
-      "options": {
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true
-      },
-      "pluginVersion": "9.3.8",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P8EFB3B3375746E67"
-          },
-          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"cpu_usage_idle\" and r.cpu== \"cpu-total\"\r\n  )\r\n    |> filter(fn: (r) => contains(value: r[\"host\"], set: ${hostlist:json}))\r\n  |> map(fn: (r) => ({host:r.host,_value: 100.0 - r._value, _time: r._time, _start: r._start, _stop:r._stop }))\r\n //|> map(fn: (r) => ({r with _value: 100.0 - r._value}))",
-          "refId": "A"
-        }
-      ],
-      "title": "CPU Usage System",
-      "type": "gauge"
+      "id": 41,
+      "panels": [],
+      "title": "Overview",
+      "type": "row"
     },
     {
       "datasource": {
@@ -126,65 +52,99 @@
             "mode": "palette-classic"
           },
           "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
             }
           },
+          "displayName": "${__field.labels.host}",
           "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
+          "unit": "dthms"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "A"
+            },
+            "properties": [
               {
-                "color": "green",
-                "value": null
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
               },
               {
-                "color": "red",
-                "value": 80
+                "id": "displayName",
+                "value": "Idle - ${__field.labels.host}"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "B"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "Running - ${__field.labels.host}"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "C"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "Busy - ${__field.labels.host}"
               }
             ]
           }
-        },
-        "overrides": []
+        ]
       },
       "gridPos": {
-        "h": 4,
-        "w": 20,
-        "x": 4,
-        "y": 0
+        "h": 7,
+        "w": 7,
+        "x": 0,
+        "y": 1
       },
-      "id": 16,
+      "id": 37,
       "options": {
+        "displayLabels": [
+          "percent"
+        ],
         "legend": {
-          "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
           "showLegend": true
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
         },
         "tooltip": {
           "mode": "single",
@@ -197,99 +157,30 @@
             "type": "influxdb",
             "uid": "P8EFB3B3375746E67"
           },
-          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"cpu_usage_idle\" and r.cpu== \"cpu-total\"\r\n  )\r\n    |> filter(fn: (r) => contains(value: r[\"host\"], set: ${hostlist:json}))\r\n  |> map(fn: (r) => ({host:r.host,_value: 100.0 - r._value, _time: r._time, _start: r._start, _stop:r._stop }))\r\n //|> map(fn: (r) => ({r with _value: 100.0 - r._value}))",
+          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu == \"cpu-total\")\r\n  |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n  |> drop(columns: [\"cpu\"])\r\n  |> group(columns: [\"host\"])\r\n  |> sort(columns: [\"_time\"])\r\n  |> elapsed(unit: 1s)\r\n  |> filter(fn: (r) => r[\"_value\"] > 98.00)\r\n  |> map(fn: (r) => ({host:r.host,_value: float(v: r.elapsed), _time: r._time, _start: r._start, _stop:r._stop }))\r\n  |> sum()\r\n  ",
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P8EFB3B3375746E67"
+          },
+          "hide": false,
+          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu == \"cpu-total\")\r\n  |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n  |> drop(columns: [\"cpu\"])\r\n  |> group(columns: [\"host\"])\r\n  |> sort(columns: [\"_time\"])\r\n  |> elapsed(unit: 1s)\r\n  |> filter(fn: (r) => r[\"_value\"] < 98.00 and r[\"_value\"] > 1.00)\r\n  |> map(fn: (r) => ({host:r.host,_value: float(v: r.elapsed), _time: r._time, _start: r._start, _stop:r._stop }))\r\n  |> sum()\r\n  ",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P8EFB3B3375746E67"
+          },
+          "hide": false,
+          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu == \"cpu-total\")\r\n  |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n  |> drop(columns: [\"cpu\"])\r\n  |> group(columns: [\"host\"])\r\n  |> sort(columns: [\"_time\"])\r\n  |> elapsed(unit: 1s)\r\n  |> filter(fn: (r) => r[\"_value\"] <= 1)\r\n  |> map(fn: (r) => ({host:r.host,_value: float(v: r.elapsed), _time: r._time, _start: r._start, _stop:r._stop }))\r\n  |> sum()\r\n  ",
+          "refId": "C"
         }
       ],
       "title": "CPU Usage",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P8EFB3B3375746E67"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "max": 100,
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "dark-red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "gauge 192.168.1.107"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Node01"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "gauge 192.168.1.111"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Node02"
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 4,
-        "x": 0,
-        "y": 4
-      },
-      "id": 6,
-      "options": {
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true
-      },
-      "pluginVersion": "9.3.8",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P8EFB3B3375746E67"
-          },
-          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mem_used_percent\")  \r\n   |> filter(fn: (r) => contains(value: r[\"host\"], set: ${hostlist:json}))\r\n  |> map(fn: (r) => ({host:r.host,_value: r._value, _time: r._time, _start: r._start, _stop:r._stop }))",
-          "refId": "A"
-        }
-      ],
-      "title": "Memory Usage",
-      "type": "gauge"
+      "type": "piechart"
     },
     {
       "datasource": {
@@ -302,35 +193,148 @@
             "mode": "palette-classic"
           },
           "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
             }
           },
+          "mappings": [],
+          "unit": "decbytes"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "A"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Used - ${__field.labels.host}"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "B"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Available  - ${__field.labels.host}"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "C"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Other - ${__field.labels.host}"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 7,
+        "x": 7,
+        "y": 1
+      },
+      "id": 50,
+      "options": {
+        "displayLabels": [
+          "percent"
+        ],
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "9.3.6",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P8EFB3B3375746E67"
+          },
+          "hide": false,
+          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mem_used_percent\" or r[\"_measurement\"] == \"mem_total\")\r\n  |> toFloat()\r\n  |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n  |> pivot(rowKey: [\"_time\"], columnKey: [\"_measurement\"], valueColumn: \"_value\")\r\n  |> map(fn: (r) => ({host:r.host,_value: r.mem_total * (r.mem_used_percent/100.00), _time: r._time, _start: r._start, _stop:r._stop }))\r\n  |> mean()",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P8EFB3B3375746E67"
+          },
+          "hide": false,
+          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mem_available_percent\" or r[\"_measurement\"] == \"mem_total\")\r\n  |> toFloat()\r\n  |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n  |> pivot(rowKey: [\"_time\"], columnKey: [\"_measurement\"], valueColumn: \"_value\")\r\n  |> map(fn: (r) => ({host:r.host,_value: r.mem_total * (r.mem_available_percent/100.00), _time: r._time, _start: r._start, _stop:r._stop }))\r\n  |> mean()",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P8EFB3B3375746E67"
+          },
+          "hide": false,
+          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mem_available_percent\" or r[\"_measurement\"] == \"mem_used_percent\" or r[\"_measurement\"] == \"mem_total\")\r\n  |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n  |> toFloat()\r\n  |> pivot(rowKey: [\"_time\"], columnKey: [\"_measurement\"], valueColumn: \"_value\")\r\n  |> map(fn: (r) => ({host:r.host,_value: (100.00 - (r.mem_used_percent + r.mem_available_percent)) / 100.00 * r.mem_total, _time: r._time, _start: r._start, _stop:r._stop }))\r\n  |> mean()",
+          "refId": "C"
+        }
+      ],
+      "title": "Memory Usage",
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P8EFB3B3375746E67"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "displayName": "${__field.labels.host}",
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -338,47 +342,1613 @@
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
-          }
+          },
+          "unit": "watt"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 4,
-        "w": 20,
-        "x": 4,
-        "y": 4
+        "h": 7,
+        "w": 5,
+        "x": 14,
+        "y": 1
       },
-      "id": 18,
+      "id": 51,
       "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
         },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
+        "textMode": "auto"
       },
+      "pluginVersion": "9.3.8",
       "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "P8EFB3B3375746E67"
           },
-          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mem_used_percent\")  \r\n   |> filter(fn: (r) => contains(value: r[\"host\"], set: ${hostlist:json}))\r\n  |> map(fn: (r) => ({host:r.host,_value: r._value, _time: r._time, _start: r._start, _stop:r._stop }))",
+          "hide": false,
+          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_package_current_power_consumption_watts\" or r[\"_measurement\"] == \"powerstat_package_current_dram_power_consumption_watts\")\r\n  |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n  |> group(columns:[\"host\"])\r\n  |> keep(columns:[\"host\",\"_value\"])\r\n  |> sum()\r\n  ",
           "refId": "A"
         }
       ],
+      "title": "CPU and Memory Power Usage",
+      "type": "stat"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "id": 39,
+      "panels": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P8EFB3B3375746E67"
+          },
+          "description": "Time Spent by host being more than 98% idle",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "fixedColor": "green",
+                "mode": "thresholds"
+              },
+              "displayName": "${__field.labels.host}",
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  }
+                ]
+              },
+              "unit": "dthms"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 0,
+            "y": 9
+          },
+          "id": 26,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "textMode": "auto"
+          },
+          "pluginVersion": "9.3.6",
+          "targets": [
+            {
+              "datasource": {
+                "type": "influxdb",
+                "uid": "P8EFB3B3375746E67"
+              },
+              "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu == \"cpu-total\")\r\n  |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n  |> drop(columns: [\"cpu\"])\r\n  |> group(columns: [\"host\"])\r\n  |> sort(columns: [\"_time\"])\r\n  |> elapsed(unit: 1s)\r\n  |> filter(fn: (r) => r[\"_value\"] > 98.00)\r\n  |> map(fn: (r) => ({host:r.host,_value: float(v: r.elapsed), _time: r._time, _start: r._start, _stop:r._stop }))\r\n  |> sum()\r\n  ",
+              "refId": "A"
+            }
+          ],
+          "title": "Time Spend On Idle",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P8EFB3B3375746E67"
+          },
+          "description": "Time Spent by host being more than 1% but less 98% idle",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "fixedColor": "yellow",
+                "mode": "thresholds"
+              },
+              "displayName": "${__field.labels.host}",
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "#EAB839",
+                    "value": 0.0001
+                  }
+                ]
+              },
+              "unit": "dthms"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 8,
+            "y": 9
+          },
+          "id": 29,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "textMode": "auto"
+          },
+          "pluginVersion": "9.3.6",
+          "targets": [
+            {
+              "datasource": {
+                "type": "influxdb",
+                "uid": "P8EFB3B3375746E67"
+              },
+              "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu == \"cpu-total\")\r\n  |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n  |> drop(columns: [\"cpu\"])\r\n  |> group(columns: [\"host\"])\r\n  |> sort(columns: [\"_time\"])\r\n  |> elapsed(unit: 1s)\r\n  |> filter(fn: (r) => r[\"_value\"] < 98.00 and r[\"_value\"] > 1.00)\r\n  |> map(fn: (r) => ({host:r.host,_value: float(v: r.elapsed), _time: r._time, _start: r._start, _stop:r._stop }))\r\n  |> sum()\r\n  ",
+              "refId": "A"
+            }
+          ],
+          "title": "Time Spend On Running",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P8EFB3B3375746E67"
+          },
+          "description": "Time Spent by host being less than 1% idle",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "fixedColor": "red",
+                "mode": "thresholds"
+              },
+              "displayName": "${__field.labels.host}",
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 0.0001
+                  }
+                ]
+              },
+              "unit": "dthms"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 16,
+            "y": 9
+          },
+          "id": 28,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "textMode": "auto"
+          },
+          "pluginVersion": "9.3.6",
+          "targets": [
+            {
+              "datasource": {
+                "type": "influxdb",
+                "uid": "P8EFB3B3375746E67"
+              },
+              "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu == \"cpu-total\")\r\n  |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n  |> drop(columns: [\"cpu\"])\r\n  |> group(columns: [\"host\"])\r\n  |> sort(columns: [\"_time\"])\r\n  |> elapsed(unit: 1s)\r\n  |> filter(fn: (r) => r[\"_value\"] <= 1)\r\n  |> map(fn: (r) => ({host:r.host,_value: float(v: r.elapsed), _time: r._time, _start: r._start, _stop:r._stop }))\r\n  |> sum()\r\n  ",
+              "refId": "A"
+            }
+          ],
+          "title": "Time Spend On Busy",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P8EFB3B3375746E67"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "max": 100,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "percent"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "gauge {cpu=\"cpu-total\", host=\"192.168.1.107\"}"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "Node01"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "gauge {cpu=\"cpu-total\", host=\"192.168.1.111\"}"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "Node02"
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 4,
+            "x": 0,
+            "y": 16
+          },
+          "id": 8,
+          "options": {
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true
+          },
+          "pluginVersion": "9.3.6",
+          "targets": [
+            {
+              "datasource": {
+                "type": "influxdb",
+                "uid": "P8EFB3B3375746E67"
+              },
+              "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"cpu_usage_idle\" and r.cpu== \"cpu-total\"\r\n  )\r\n  |> last()\r\n  |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n  |> map(fn: (r) => ({host:r.host,_value: 100.0 - r._value, _time: r._time, _start: r._start, _stop:r._stop }))",
+              "refId": "A"
+            }
+          ],
+          "title": "Current CPU Usage",
+          "type": "gauge"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P8EFB3B3375746E67"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "percent"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 20,
+            "x": 4,
+            "y": 16
+          },
+          "id": 16,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "influxdb",
+                "uid": "P8EFB3B3375746E67"
+              },
+              "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"cpu_usage_idle\" and r.cpu== \"cpu-total\"\r\n  )\r\n  |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n  |> aggregateWindow(every: ${timeinterval}, fn: mean)\r\n  |> map(fn: (r) => ({host:r.host,_value: 100.0 - r._value, _time: r._time, _start: r._start, _stop:r._stop }))",
+              "refId": "A"
+            }
+          ],
+          "title": "CPU Usage",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P8EFB3B3375746E67"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "max": 100,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 90
+                  }
+                ]
+              },
+              "unit": "percent"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 10,
+            "w": 4,
+            "x": 0,
+            "y": 24
+          },
+          "id": 14,
+          "options": {
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true
+          },
+          "pluginVersion": "9.3.6",
+          "targets": [
+            {
+              "datasource": {
+                "type": "influxdb",
+                "uid": "P8EFB3B3375746E67"
+              },
+              "query": "import \"strings\"\r\n\r\nfrom(bucket:\"intel\")\r\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n          |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu != \"cpu-total\")\r\n          |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n          |> last()\r\n          |> map(fn: (r) => ({hostcpu: strings.joinStr(arr: [r.host,r.cpu ], v: \"-\"),_value: 100.00 - r._value, _time: r._time, _start: r._start, _stop:r._stop }))\r\n          |> group(columns: [\"hostcpu\"])\r\n          |> pivot(rowKey: [\"_time\"], columnKey: [\"hostcpu\"], valueColumn: \"_value\")\r\n",
+              "refId": "A"
+            }
+          ],
+          "title": "Current Utilization of each logical core",
+          "type": "gauge"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P8EFB3B3375746E67"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "percent"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 10,
+            "w": 20,
+            "x": 4,
+            "y": 24
+          },
+          "id": 35,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "influxdb",
+                "uid": "P8EFB3B3375746E67"
+              },
+              "query": "import \"strings\"\r\n\r\nfrom(bucket:\"intel\")\r\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n          |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu != \"cpu-total\")\r\n          |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n          |> sort(columns: [\"host\"])\r\n          |> aggregateWindow(every: ${timeinterval}, fn: mean)\r\n          |> map(fn: (r) => ({hostcpu: strings.joinStr(arr: [r.host,r.cpu ], v: \"-\"),_value: 100.00 - r._value, _time: r._time, _start: r._start, _stop:r._stop }))\r\n          |> group(columns: [\"hostcpu\"])\r\n          |> pivot(rowKey: [\"_time\"], columnKey: [\"hostcpu\"], valueColumn: \"_value\")",
+              "refId": "A"
+            }
+          ],
+          "title": "Utilization of each logical core",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P8EFB3B3375746E67"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "max": 100,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  }
+                ]
+              },
+              "unit": "rothz"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 10,
+            "w": 4,
+            "x": 0,
+            "y": 34
+          },
+          "id": 49,
+          "options": {
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true
+          },
+          "pluginVersion": "9.3.6",
+          "targets": [
+            {
+              "datasource": {
+                "type": "influxdb",
+                "uid": "P8EFB3B3375746E67"
+              },
+              "query": "import \"strings\"\r\n\r\nfrom(bucket:\"intel\")\r\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n          |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_core_cpu_frequency_mhz\")\r\n          |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n          |> sort(columns: [\"host\"])\r\n          |> aggregateWindow(every: ${timeinterval}, fn: mean)\r\n          |> map(fn: (r) => ({hostcpu: strings.joinStr(arr: [r.host,r.cpu_id ], v: \"-\"),_value: r._value * 1000000.00, _time: r._time, _start: r._start, _stop:r._stop }))\r\n          |> group(columns: [\"hostcpu\"])\r\n          |> pivot(rowKey: [\"_time\"], columnKey: [\"hostcpu\"], valueColumn: \"_value\")",
+              "refId": "A"
+            }
+          ],
+          "title": "Current Each logical core Speed",
+          "type": "gauge"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P8EFB3B3375746E67"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "rothz"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 10,
+            "w": 20,
+            "x": 4,
+            "y": 34
+          },
+          "id": 48,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "influxdb",
+                "uid": "P8EFB3B3375746E67"
+              },
+              "query": "import \"strings\"\r\n\r\nfrom(bucket:\"intel\")\r\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n          |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_core_cpu_frequency_mhz\")\r\n          |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n          |> sort(columns: [\"host\"])\r\n          |> aggregateWindow(every: ${timeinterval}, fn: mean)\r\n          |> map(fn: (r) => ({hostcpu: strings.joinStr(arr: [r.host,r.cpu_id ], v: \"-\"),_value: r._value * 1000000.00, _time: r._time, _start: r._start, _stop:r._stop }))\r\n          |> group(columns: [\"hostcpu\"])\r\n          |> pivot(rowKey: [\"_time\"], columnKey: [\"hostcpu\"], valueColumn: \"_value\")",
+              "refId": "A"
+            }
+          ],
+          "title": "Each logical core Speed",
+          "type": "timeseries"
+        }
+      ],
+      "title": "CPU Usage",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
+      "id": 31,
+      "panels": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P8EFB3B3375746E67"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  }
+                ]
+              },
+              "unit": "decbytes"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 7,
+            "x": 0,
+            "y": 10
+          },
+          "id": 53,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "mean"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "textMode": "auto"
+          },
+          "pluginVersion": "9.3.6",
+          "targets": [
+            {
+              "datasource": {
+                "type": "influxdb",
+                "uid": "P8EFB3B3375746E67"
+              },
+              "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mem_available\")\r\n  |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)",
+              "refId": "A"
+            }
+          ],
+          "title": "Average Available Memory",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P8EFB3B3375746E67"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 0.0001
+                  }
+                ]
+              },
+              "unit": "decbytes"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 7,
+            "x": 7,
+            "y": 10
+          },
+          "id": 54,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "mean"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "textMode": "auto"
+          },
+          "pluginVersion": "9.3.6",
+          "targets": [
+            {
+              "datasource": {
+                "type": "influxdb",
+                "uid": "P8EFB3B3375746E67"
+              },
+              "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mem_used\")\r\n  |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)",
+              "refId": "A"
+            }
+          ],
+          "title": "Average Used Memory",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P8EFB3B3375746E67"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "max": 100,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "dark-red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "percent"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "gauge 192.168.1.107"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "Node01"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "gauge 192.168.1.111"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "Node02"
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 4,
+            "x": 0,
+            "y": 17
+          },
+          "id": 6,
+          "options": {
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true
+          },
+          "pluginVersion": "9.3.6",
+          "targets": [
+            {
+              "datasource": {
+                "type": "influxdb",
+                "uid": "P8EFB3B3375746E67"
+              },
+              "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mem_used_percent\")\r\n  |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n  |> last()\r\n  |> sort(columns: [\"_time\"])\r\n  |> map(fn: (r) => ({host:r.host,_value: r._value, _time: r._time, _start: r._start, _stop:r._stop }))",
+              "refId": "A"
+            }
+          ],
+          "title": "Current Memory Usage %",
+          "type": "gauge"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P8EFB3B3375746E67"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "percent"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 20,
+            "x": 4,
+            "y": 17
+          },
+          "id": 18,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "influxdb",
+                "uid": "P8EFB3B3375746E67"
+              },
+              "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mem_used_percent\")  \r\n  |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n  |> aggregateWindow(every: ${timeinterval}, fn: mean)\r\n  |> map(fn: (r) => ({host:r.host,_value: r._value, _time: r._time, _start: r._start, _stop:r._stop }))",
+              "refId": "A"
+            }
+          ],
+          "title": "Memory Usage %",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P8EFB3B3375746E67"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "max": 100,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  }
+                ]
+              },
+              "unit": "decbytes"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 4,
+            "x": 0,
+            "y": 21
+          },
+          "id": 56,
+          "options": {
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true
+          },
+          "pluginVersion": "9.3.6",
+          "targets": [
+            {
+              "datasource": {
+                "type": "influxdb",
+                "uid": "P8EFB3B3375746E67"
+              },
+              "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mem_used\")\r\n  |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n  |> sort(columns: [\"_time\"])\r\n  |> map(fn: (r) => ({host:r.host,_value: r._value, _time: r._time, _start: r._start, _stop:r._stop }))",
+              "refId": "A"
+            }
+          ],
+          "title": "Current Memory Usage Bytes",
+          "type": "gauge"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P8EFB3B3375746E67"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "decbytes"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 20,
+            "x": 4,
+            "y": 21
+          },
+          "id": 55,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "influxdb",
+                "uid": "P8EFB3B3375746E67"
+              },
+              "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mem_used\")  \r\n  |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n  |> aggregateWindow(every: ${timeinterval}, fn: mean)\r\n  |> map(fn: (r) => ({host:r.host,_value: r._value, _time: r._time, _start: r._start, _stop:r._stop }))",
+              "refId": "A"
+            }
+          ],
+          "title": "Memory Usage Byte",
+          "type": "timeseries"
+        }
+      ],
       "title": "Memory Usage",
-      "type": "timeseries"
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 10
+      },
+      "id": 43,
+      "panels": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P8EFB3B3375746E67"
+          },
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "max": 100,
+              "min": 0,
+              "thresholds": {
+                "mode": "percentage",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "watt"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 4,
+            "x": 0,
+            "y": 11
+          },
+          "id": 24,
+          "options": {
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true
+          },
+          "pluginVersion": "9.3.6",
+          "targets": [
+            {
+              "datasource": {
+                "type": "influxdb",
+                "uid": "P8EFB3B3375746E67"
+              },
+              "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_package_current_power_consumption_watts\")\r\n  |> last()\r\n  |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n  |> map(fn: (r) => ({host:r.host,_value: r._value, _time: r._time, _start: r._start, _stop:r._stop }))",
+              "refId": "A"
+            }
+          ],
+          "title": "Current CPU Power Consumption",
+          "type": "gauge"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P8EFB3B3375746E67"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "watt"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "gauge {host=\"192.168.1.107\", package_id=\"0\"}"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "Node01 - Package 0"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "gauge {host=\"192.168.1.107\", package_id=\"1\"}"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "Node01 - Package 1"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "gauge {host=\"192.168.1.111\", package_id=\"0\"}"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "Node02 - Package 0"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "gauge {host=\"192.168.1.111\", package_id=\"1\"}"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "Node02 - Package 1"
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 20,
+            "x": 4,
+            "y": 11
+          },
+          "id": 12,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "influxdb",
+                "uid": "P8EFB3B3375746E67"
+              },
+              "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_package_current_power_consumption_watts\")\r\n  |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n  |> aggregateWindow(every: ${timeinterval}, fn: sum)\r\n  |> map(fn: (r) => ({host:r.host,_value: r._value, _time: r._time, _start: r._start, _stop:r._stop }))",
+              "refId": "A"
+            }
+          ],
+          "title": "CPU Power Consumption",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P8EFB3B3375746E67"
+          },
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "max": 100,
+              "min": 0,
+              "thresholds": {
+                "mode": "percentage",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "watt"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 4,
+            "x": 0,
+            "y": 15
+          },
+          "id": 58,
+          "options": {
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true
+          },
+          "pluginVersion": "9.3.6",
+          "targets": [
+            {
+              "datasource": {
+                "type": "influxdb",
+                "uid": "P8EFB3B3375746E67"
+              },
+              "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_package_current_dram_power_consumption_watts\")\r\n  |> last()\r\n  |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n  |> map(fn: (r) => ({host:r.host,_value: r._value, _time: r._time, _start: r._start, _stop:r._stop }))",
+              "refId": "A"
+            }
+          ],
+          "title": "Current Memory Power Consumption",
+          "type": "gauge"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P8EFB3B3375746E67"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "watt"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "gauge {host=\"192.168.1.107\", package_id=\"0\"}"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "Node01 - Package 0"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "gauge {host=\"192.168.1.107\", package_id=\"1\"}"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "Node01 - Package 1"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "gauge {host=\"192.168.1.111\", package_id=\"0\"}"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "Node02 - Package 0"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "gauge {host=\"192.168.1.111\", package_id=\"1\"}"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "Node02 - Package 1"
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 20,
+            "x": 4,
+            "y": 15
+          },
+          "id": 57,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "influxdb",
+                "uid": "P8EFB3B3375746E67"
+              },
+              "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_package_current_dram_power_consumption_watts\")\r\n  |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n  |> aggregateWindow(every: ${timeinterval}, fn: sum)\r\n  |> map(fn: (r) => ({host:r.host,_value: r._value, _time: r._time, _start: r._start, _stop:r._stop }))",
+              "refId": "A"
+            }
+          ],
+          "title": "Memory Power Consumption",
+          "type": "timeseries"
+        }
+      ],
+      "title": "Power Usage",
+      "type": "row"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 11
+      },
+      "id": 45,
+      "panels": [],
+      "title": "Integrated GPU Usage",
+      "type": "row"
     },
     {
       "datasource": {
@@ -410,10 +1980,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 4,
+        "h": 5,
         "w": 4,
         "x": 0,
-        "y": 8
+        "y": 12
       },
       "id": 20,
       "options": {
@@ -435,11 +2005,11 @@
             "type": "influxdb",
             "uid": "P8EFB3B3375746E67"
           },
-          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"gpu_busyness_3d_percentage_01_value\"\r\n  )",
+          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"gpu_render3d\"\r\n  )\r\n  |> last()\r\n  |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n   |> map(fn: (r) => ({host:r.host,_value: r._value, _time: r._time, _start: r._start, _stop:r._stop }))",
           "refId": "A"
         }
       ],
-      "title": "i915 GPU Usage",
+      "title": "Current i915 GPU Usage",
       "type": "gauge"
     },
     {
@@ -499,13 +2069,62 @@
             ]
           }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "A"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Render3D"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "B"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Video"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "C"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Blitter"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "D"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Video Enhance"
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
-        "h": 4,
+        "h": 11,
         "w": 20,
         "x": 4,
-        "y": 8
+        "y": 12
       },
       "id": 22,
       "options": {
@@ -527,477 +2146,255 @@
             "type": "influxdb",
             "uid": "P8EFB3B3375746E67"
           },
-          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"gpu_busyness_3d_percentage_01_value\"\r\n  )",
+          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"gpu_render3d\"\r\n  )\r\n  |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n  |> aggregateWindow(every: ${timeinterval}, fn: mean)\r\n  |> map(fn: (r) => ({host:r.host,_value: r._value, _time: r._time, _start: r._start, _stop:r._stop }))",
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P8EFB3B3375746E67"
+          },
+          "hide": false,
+          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"gpu_video\"\r\n  )\r\n  |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n  |> aggregateWindow(every: ${timeinterval}, fn: mean)\r\n  |> map(fn: (r) => ({host:r.host,_value: r._value, _time: r._time, _start: r._start, _stop:r._stop }))",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P8EFB3B3375746E67"
+          },
+          "hide": false,
+          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"gpu_blitter\"\r\n  )\r\n  |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n  |> aggregateWindow(every: ${timeinterval}, fn: mean)\r\n  |> map(fn: (r) => ({host:r.host,_value: r._value, _time: r._time, _start: r._start, _stop:r._stop }))",
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P8EFB3B3375746E67"
+          },
+          "hide": false,
+          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"gpu_video_enhance\"\r\n  )\r\n  |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n  |> aggregateWindow(every: ${timeinterval}, fn: mean)\r\n  |> map(fn: (r) => ({host:r.host,_value: r._value, _time: r._time, _start: r._start, _stop:r._stop }))",
+          "refId": "D"
         }
       ],
       "title": "i915 GPU Usage",
       "type": "timeseries"
     },
     {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P8EFB3B3375746E67"
-      },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "max": 100,
-          "min": 0,
-          "thresholds": {
-            "mode": "percentage",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
+      "collapsed": true,
       "gridPos": {
-        "h": 4,
-        "w": 4,
-        "x": 0,
-        "y": 12
-      },
-      "id": 24,
-      "options": {
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true
-      },
-      "pluginVersion": "9.3.8",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P8EFB3B3375746E67"
-          },
-          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_package_current_power_consumption_watts\")\r\n  |> filter(fn: (r) => contains(value: r[\"host\"], set: ${hostlist:json}))\r\n  |> map(fn: (r) => ({host:r.host,package_id:r.package_id,_value: r._value, _time: r._time, _start: r._start, _stop:r._stop }))",
-          "refId": "A"
-        }
-      ],
-      "title": "Power Consumption",
-      "type": "gauge"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P8EFB3B3375746E67"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "gauge {host=\"192.168.1.107\", package_id=\"0\"}"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Node01 - Package 0"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "gauge {host=\"192.168.1.107\", package_id=\"1\"}"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Node01 - Package 1"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "gauge {host=\"192.168.1.111\", package_id=\"0\"}"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Node02 - Package 0"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "gauge {host=\"192.168.1.111\", package_id=\"1\"}"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Node02 - Package 1"
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 20,
-        "x": 4,
-        "y": 12
-      },
-      "id": 12,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P8EFB3B3375746E67"
-          },
-          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"powerstat_package_current_power_consumption_watts\")\r\n  |> filter(fn: (r) => contains(value: r[\"host\"], set: ${hostlist:json}))\r\n  |> map(fn: (r) => ({host:r.host,package_id:r.package_id,_value: r._value, _time: r._time, _start: r._start, _stop:r._stop }))",
-          "refId": "A"
-        }
-      ],
-      "title": "Power Consumption",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P8EFB3B3375746E67"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "max": 100,
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 90
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 4,
+        "h": 1,
         "w": 24,
         "x": 0,
-        "y": 16
+        "y": 23
       },
-      "id": 14,
-      "options": {
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
+      "id": 47,
+      "panels": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P8EFB3B3375746E67"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 5,
+            "w": 12,
+            "x": 0,
+            "y": 23
+          },
+          "id": 10,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "influxdb",
+                "uid": "P8EFB3B3375746E67"
+              },
+              "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"net_packets_recv\" and (r.interface == \"eno1\" or r.interface == \"enp3s0\")\r\n  )\r\n  |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n  |> aggregateWindow(every: ${timeinterval}, fn: mean)\r\n  |> map(fn: (r) => ({host:r.host,_value: r._value, _time: r._time, _start: r._start, _stop:r._stop }))\r\n",
+              "refId": "A"
+            }
           ],
-          "fields": "",
-          "values": false
+          "title": "Network Packets Received",
+          "transformations": [],
+          "type": "timeseries"
         },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true
-      },
-      "pluginVersion": "9.3.8",
-      "targets": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "P8EFB3B3375746E67"
           },
-          "query": "import \"strings\"\r\n\r\nfrom(bucket:\"intel\")\r\n          |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n          |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\" and r.cpu != \"cpu-total\")\r\n          |> filter(fn: (r) => contains(value: r[\"host\"], set: ${hostlist:json}))\r\n          |> sort(columns: [\"host\"])\r\n          |> last()\r\n          |> map(fn: (r) => ({hostcpu: strings.joinStr(arr: [r.host,r.cpu ], v: \"-\"),_value: 100.00 - r._value, _time: r._time, _start: r._start, _stop:r._stop }))\r\n          |> group(columns: [\"hostcpu\"])\r\n          |> pivot(rowKey: [\"_time\"], columnKey: [\"hostcpu\"], valueColumn: \"_value\")\r\n",
-          "refId": "A"
-        }
-      ],
-      "title": "Utilization of each logical core",
-      "type": "gauge"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P8EFB3B3375746E67"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
             },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
+            "overrides": [
               {
-                "color": "green"
+                "matcher": {
+                  "id": "byName",
+                  "options": "counter {host=\"192.168.1.111\", interface=\"wlo1\"}"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "Node02"
+                  }
+                ]
               },
               {
-                "color": "red",
-                "value": 80
+                "matcher": {
+                  "id": "byName",
+                  "options": "counter {host=\"192.168.1.107\", interface=\"wlo1\"}"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "Node01"
+                  }
+                ]
               }
             ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 11,
-        "x": 0,
-        "y": 20
-      },
-      "id": 10,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P8EFB3B3375746E67"
           },
-          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"net_packets_recv\" and (r.interface == \"eno1\" or r.interface == \"enp3s0\")\r\n  )\r\n  |> filter(fn: (r) => contains(value: r[\"host\"], set: ${hostlist:json}))\r\n  |> map(fn: (r) => ({host:r.host,_value: r._value, _time: r._time, _start: r._start, _stop:r._stop }))\r\n",
-          "refId": "A"
-        }
-      ],
-      "title": "Network Packets Received",
-      "transformations": [],
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P8EFB3B3375746E67"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
+          "gridPos": {
+            "h": 5,
+            "w": 12,
+            "x": 12,
+            "y": 23
           },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
+          "id": 2,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
             },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
             }
           },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
+          "targets": [
+            {
+              "datasource": {
+                "type": "influxdb",
+                "uid": "P8EFB3B3375746E67"
               },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "counter {host=\"192.168.1.111\", interface=\"wlo1\"}"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Node02"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "counter {host=\"192.168.1.107\", interface=\"wlo1\"}"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Node01"
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 10,
-        "x": 11,
-        "y": 20
-      },
-      "id": 2,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P8EFB3B3375746E67"
-          },
-          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"net_packets_sent\" and r.interface == \"eno1\"\r\n  )\r\n  |> filter(fn: (r) => contains(value: r[\"host\"], set: ${hostlist:json}))\r\n  |> map(fn: (r) => ({host:r.host,_value: r._value, _time: r._time, _start: r._start, _stop:r._stop }))",
-          "refId": "A"
+              "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"net_packets_sent\" and r.interface == \"eno1\"\r\n  )\r\n  |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n  |> aggregateWindow(every: ${timeinterval}, fn: mean)\r\n  |> map(fn: (r) => ({host:r.host,_value: r._value, _time: r._time, _start: r._start, _stop:r._stop }))",
+              "refId": "A"
+            }
+          ],
+          "title": "Network Packets Sent",
+          "type": "timeseries"
         }
       ],
-      "title": "Network Packets Sent",
-      "type": "timeseries"
+      "title": "Network Usage",
+      "type": "row"
     }
   ],
   "refresh": "5s",
@@ -1010,8 +2407,8 @@
         "allValue": "",
         "current": {
           "selected": false,
-          "text": "All",
-          "value": "$__all"
+          "text": "192.168.1.111",
+          "value": "192.168.1.111"
         },
         "datasource": {
           "type": "influxdb",
@@ -1019,12 +2416,36 @@
         },
         "definition": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\")\r\n  |> group()\r\n  |> distinct(column: \"host\")\r\n  ",
         "hide": 0,
-        "includeAll": true,
-        "label": "Host",
+        "includeAll": false,
+        "label": "Node",
         "multi": true,
         "name": "hostlist",
         "options": [],
         "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\")\r\n  |> group()\r\n  |> distinct(column: \"host\")\r\n  ",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "1m",
+          "value": "1m"
+        },
+        "datasource": {
+          "type": "influxdb",
+          "uid": "P8EFB3B3375746E67"
+        },
+        "definition": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\")\r\n  |> sort(columns: [\"_time\"])\r\n  |> group()\r\n  |> elapsed(unit: 1s)\r\n  |>sum(column:\"elapsed\")\r\n  |> map(\r\n        fn: (r) => ({\r\n            elapse: r.elapsed,\r\n            duration: \r\n            if r.elapsed < 600.00 then \"30s\" \r\n            else if r.elapsed > 600.00 and r.elapsed < 3600.00 then \"1m\"\r\n            else if r.elapsed > 3600.00 and r.elapsed < 86400.00 then \"15m\"\r\n            else if r.elapsed > 86400.00 and r.elapsed < 259200.00 then \"1h\"\r\n            else if r.elapsed > 259200.00 and r.elapsed < 432000.00 then \"3h\"\r\n            else \"6h\",\r\n           }),\r\n    )\r\n  |>drop(columns:[\"elapse\"])",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Graph Interval",
+        "multi": false,
+        "name": "timeinterval",
+        "options": [],
+        "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"cpu_usage_idle\")\r\n  |> sort(columns: [\"_time\"])\r\n  |> group()\r\n  |> elapsed(unit: 1s)\r\n  |>sum(column:\"elapsed\")\r\n  |> map(\r\n        fn: (r) => ({\r\n            elapse: r.elapsed,\r\n            duration: \r\n            if r.elapsed < 600.00 then \"30s\" \r\n            else if r.elapsed > 600.00 and r.elapsed < 3600.00 then \"1m\"\r\n            else if r.elapsed > 3600.00 and r.elapsed < 86400.00 then \"15m\"\r\n            else if r.elapsed > 86400.00 and r.elapsed < 259200.00 then \"1h\"\r\n            else if r.elapsed > 259200.00 and r.elapsed < 432000.00 then \"3h\"\r\n            else \"6h\",\r\n           }),\r\n    )\r\n  |>drop(columns:[\"elapse\"])",
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
@@ -1040,7 +2461,7 @@
   "timepicker": {},
   "timezone": "",
   "title": "Intel Cluster Node Monitoring",
-  "uid": "Xcxo6u14j",
-  "version": 2,
+  "uid": "Xcxo6u14k",
+  "version": 1,
   "weekStart": ""
 }
