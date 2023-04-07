@@ -1,7 +1,7 @@
 ### Installing DPDK on the node
 Installing pre-requisties tools
 ```
-sudo apt-get install -y meson python3-pyelftools python-pyelftools
+sudo apt-get install -y meson python3-pyelftools
 ```
 Get any DPDK release that suited from [here](http://core.dpdk.org/download/)
 ```
