@@ -1938,7 +1938,7 @@
       "type": "row"
     },
     {
-      "collapsed": false,
+      "collapsed": true,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -1946,239 +1946,238 @@
         "y": 11
       },
       "id": 45,
-      "panels": [],
-      "title": "Integrated GPU Usage",
-      "type": "row"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P8EFB3B3375746E67"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "max": 100,
-          "min": 0,
-          "thresholds": {
-            "mode": "percentage",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 4,
-        "x": 0,
-        "y": 12
-      },
-      "id": 20,
-      "options": {
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true
-      },
-      "pluginVersion": "9.3.8",
-      "targets": [
+      "panels": [
         {
           "datasource": {
             "type": "influxdb",
             "uid": "P8EFB3B3375746E67"
           },
-          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"gpu_render3d\"\r\n  )\r\n  |> last()\r\n  |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n   |> map(fn: (r) => ({host:r.host,_value: r._value, _time: r._time, _start: r._start, _stop:r._stop }))",
-          "refId": "A"
-        }
-      ],
-      "title": "Current i915 GPU Usage",
-      "type": "gauge"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P8EFB3B3375746E67"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "max": 100,
+              "min": 0,
+              "thresholds": {
+                "mode": "percentage",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
           },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
+          "gridPos": {
+            "h": 5,
+            "w": 4,
+            "x": 0,
+            "y": 20
+          },
+          "id": 20,
+          "options": {
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
             },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true
+          },
+          "pluginVersion": "9.3.6",
+          "targets": [
+            {
+              "datasource": {
+                "type": "influxdb",
+                "uid": "P8EFB3B3375746E67"
+              },
+              "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"gpu_render3d\"\r\n  )\r\n  |> last()\r\n  |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n   |> map(fn: (r) => ({host:r.host,_value: r._value, _time: r._time, _start: r._start, _stop:r._stop }))",
+              "refId": "A"
+            }
+          ],
+          "title": "Current i915 GPU Usage",
+          "type": "gauge"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P8EFB3B3375746E67"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "max": 100,
+              "min": 0,
+              "thresholds": {
+                "mode": "percentage",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
             },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byFrameRefID",
+                  "options": "A"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "Render3D"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byFrameRefID",
+                  "options": "B"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "Video"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byFrameRefID",
+                  "options": "C"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "Blitter"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byFrameRefID",
+                  "options": "D"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "Video Enhance"
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 11,
+            "w": 20,
+            "x": 4,
+            "y": 20
+          },
+          "id": 22,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
             },
-            "thresholdsStyle": {
-              "mode": "off"
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
             }
           },
-          "mappings": [],
-          "max": 100,
-          "min": 0,
-          "thresholds": {
-            "mode": "percentage",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
+          "pluginVersion": "9.3.8",
+          "targets": [
+            {
+              "datasource": {
+                "type": "influxdb",
+                "uid": "P8EFB3B3375746E67"
               },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byFrameRefID",
-              "options": "A"
+              "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"gpu_render3d\"\r\n  )\r\n  |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n  |> aggregateWindow(every: ${timeinterval}, fn: mean)\r\n  |> map(fn: (r) => ({host:r.host,_value: r._value, _time: r._time, _start: r._start, _stop:r._stop }))",
+              "refId": "A"
             },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Render3D"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byFrameRefID",
-              "options": "B"
+            {
+              "datasource": {
+                "type": "influxdb",
+                "uid": "P8EFB3B3375746E67"
+              },
+              "hide": false,
+              "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"gpu_video\"\r\n  )\r\n  |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n  |> aggregateWindow(every: ${timeinterval}, fn: mean)\r\n  |> map(fn: (r) => ({host:r.host,_value: r._value, _time: r._time, _start: r._start, _stop:r._stop }))",
+              "refId": "B"
             },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Video"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byFrameRefID",
-              "options": "C"
+            {
+              "datasource": {
+                "type": "influxdb",
+                "uid": "P8EFB3B3375746E67"
+              },
+              "hide": false,
+              "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"gpu_blitter\"\r\n  )\r\n  |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n  |> aggregateWindow(every: ${timeinterval}, fn: mean)\r\n  |> map(fn: (r) => ({host:r.host,_value: r._value, _time: r._time, _start: r._start, _stop:r._stop }))",
+              "refId": "C"
             },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Blitter"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byFrameRefID",
-              "options": "D"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Video Enhance"
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 11,
-        "w": 20,
-        "x": 4,
-        "y": 12
-      },
-      "id": 22,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "9.3.8",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P8EFB3B3375746E67"
-          },
-          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"gpu_render3d\"\r\n  )\r\n  |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n  |> aggregateWindow(every: ${timeinterval}, fn: mean)\r\n  |> map(fn: (r) => ({host:r.host,_value: r._value, _time: r._time, _start: r._start, _stop:r._stop }))",
-          "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P8EFB3B3375746E67"
-          },
-          "hide": false,
-          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"gpu_video\"\r\n  )\r\n  |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n  |> aggregateWindow(every: ${timeinterval}, fn: mean)\r\n  |> map(fn: (r) => ({host:r.host,_value: r._value, _time: r._time, _start: r._start, _stop:r._stop }))",
-          "refId": "B"
-        },
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P8EFB3B3375746E67"
-          },
-          "hide": false,
-          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"gpu_blitter\"\r\n  )\r\n  |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n  |> aggregateWindow(every: ${timeinterval}, fn: mean)\r\n  |> map(fn: (r) => ({host:r.host,_value: r._value, _time: r._time, _start: r._start, _stop:r._stop }))",
-          "refId": "C"
-        },
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P8EFB3B3375746E67"
-          },
-          "hide": false,
-          "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"gpu_video_enhance\"\r\n  )\r\n  |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n  |> aggregateWindow(every: ${timeinterval}, fn: mean)\r\n  |> map(fn: (r) => ({host:r.host,_value: r._value, _time: r._time, _start: r._start, _stop:r._stop }))",
-          "refId": "D"
+            {
+              "datasource": {
+                "type": "influxdb",
+                "uid": "P8EFB3B3375746E67"
+              },
+              "hide": false,
+              "query": "from(bucket: \"intel\")\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"gpu_video_enhance\"\r\n  )\r\n  |> filter(fn: (r) => r[\"host\"] =~ /^${hostlist:regex}$/)\r\n  |> aggregateWindow(every: ${timeinterval}, fn: mean)\r\n  |> map(fn: (r) => ({host:r.host,_value: r._value, _time: r._time, _start: r._start, _stop:r._stop }))",
+              "refId": "D"
+            }
+          ],
+          "title": "i915 GPU Usage",
+          "type": "timeseries"
         }
       ],
-      "title": "i915 GPU Usage",
-      "type": "timeseries"
+      "title": "Integrated GPU Usage",
+      "type": "row"
     },
     {
       "collapsed": true,
@@ -2186,7 +2185,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 23
+        "y": 12
       },
       "id": 47,
       "panels": [
@@ -2406,9 +2405,13 @@
       {
         "allValue": "",
         "current": {
-          "selected": false,
-          "text": "192.168.1.111",
-          "value": "192.168.1.111"
+          "selected": true,
+          "text": [
+            "TGL01"
+          ],
+          "value": [
+            "TGL01"
+          ]
         },
         "datasource": {
           "type": "influxdb",
@@ -2431,8 +2434,8 @@
       {
         "current": {
           "selected": false,
-          "text": "1m",
-          "value": "1m"
+          "text": "30s",
+          "value": "30s"
         },
         "datasource": {
           "type": "influxdb",
@@ -2455,7 +2458,7 @@
     ]
   },
   "time": {
-    "from": "now-30m",
+    "from": "now-5m",
     "to": "now"
   },
   "timepicker": {},
