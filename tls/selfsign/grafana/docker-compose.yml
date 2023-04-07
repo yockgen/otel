@@ -1,0 +1,18 @@
+version: "3.9"
+services:
+  grafana-service-01:
+    image: "grafana/grafana-enterprise:9.3.6"
+    user: 1000:1000
+    environment:
+      - GF_SERVER_CERT_FILE=/etc/ssl/self-signed.crt
+      - GF_SERVER_CERT_KEY=/etc/ssl/self-signed.key
+      - GF_SERVER_PROTOCOL=https
+    volumes:
+      - grafana-storage:/var/lib/grafana
+      - ./ssl:/etc/ssl/
+    ports:
+      - "59500:3000"
+volumes:
+    grafana-storage:
+        external: false
+

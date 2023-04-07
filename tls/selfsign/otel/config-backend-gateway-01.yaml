@@ -1,0 +1,49 @@
+receivers:
+
+  otlp:
+    protocols:
+      grpc:
+        tls:
+          cert_file: /etc/ssl/client/self-signed.crt
+          key_file: /etc/ssl/client/self-signed.key
+      http:
+
+processors:
+  batch:
+
+exporters:
+  #logging:
+  #  logLevel: debug
+
+  #file:
+  #  path: /data/temp/otel_db.json
+
+  influxdb:
+    endpoint: https://192.168.1.22:58100
+    timeout: 500ms
+    org: intel
+    bucket: intel
+    token: _hnEeqaA9pZmHZpU4sroPmm-9VstwJekiQjuXbCVWk5ZuJ18gUCllTEkfKLZUNkOLYGkm0lMbvtFO-M4MkWBmA==
+    metrics_schema: telegraf-prometheus-v1
+    tls:
+      insecure: false
+      ca_file: /etc/ssl/server/self-signed.crt
+      cert_file: /etc/ssl/client/self-signed.crt
+      key_file: /etc/ssl/client/self-signed.key
+      min_version: "1.1"
+      max_version: "1.2"
+      insecure_skip_verify: true
+
+service:
+
+  pipelines:
+
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [influxdb]
+
+    metrics:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [influxdb]
