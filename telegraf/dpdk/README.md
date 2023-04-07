@@ -1,4 +1,21 @@
-
+### Installing DPDK on the node
+Installing pre-requisties tools
+```
+sudo apt-get install -y meson python3-pyelftools python-pyelftools
+```
+Get any DPDK release that suited from [here](http://core.dpdk.org/download/)
+```
+wget http://fast.dpdk.org/rel/dpdk-22.11.1.tar.xz
+tar xf dpdk-22.11.1.tar.xz
+```
+Compiling DPDK from source
+```
+cd ./dpdk-22.11.1
+meson build 
+cd build
+ninja 
+sudo ninja install
+```
 ### Bootup - each time device booted or restarted
 1. Setup DPDK Huge Page
 ```
