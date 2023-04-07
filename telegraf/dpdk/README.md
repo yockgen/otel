@@ -1,5 +1,5 @@
 
-### Node bootup
+### Bootup - each time device booted or restarted
 1. Setup DPDK Huge Page
 ```
 mkdir -p /dev/hugepages
@@ -22,7 +22,19 @@ python3 /data/dpdk/dpdk-stable-22.11.1/usertools/dpdk-devbind.py -b vfio-pci 000
 ```
 telegraf --config /data/otel/telegraf/dpdk/demo-dpdk.conf
 ```
-### Run any DPDK application,for example
+### Run any DPDK application,for example:
+- Running TESTPMD DPDK app
 ```
 /data/dpdk/dpdk-stable-22.11.1/build/app/dpdk-testpmd --telemetry -- -i
 ```
+- Try to send some packets out from interface
+```
+testpmd> set fwd txonly
+testpmd> show port info 0
+testpmd> set eth-peer  0 54:b2:03:9f:23:f2
+testpmd> start
+testpmd> stop
+```
+- Observing if DPDK telemetry metrices been captured in target Dashboard
+
+
