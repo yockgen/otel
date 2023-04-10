@@ -2,7 +2,6 @@ version: "3.9"
 services:
   influxdb:
     image: "influxdb:2.6.1"
-    #privileged: true
     user: 1000:1000
     environment:
       - DOCKER_INFLUXDB_INIT_MODE=setup
@@ -10,20 +9,14 @@ services:
       - DOCKER_INFLUXDB_INIT_PASSWORD=admin@intel
       - DOCKER_INFLUXDB_INIT_ORG=intel
       - DOCKER_INFLUXDB_INIT_BUCKET=intel
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=_hnEeqaA9pZmHZpU4sroPmm-9VstwJekiQjuXbCVWk5ZuJ18gUCllTEkfKLZUNkOLYGkm0lMbvtFO-M4MkWBmA==
       - DOCKER_INFLUXDB_INIT_RETENTION=8h
       - INFLUXD_TLS_KEY=/etc/ssl/self-signed.key
       - INFLUXD_TLS_CERT=/etc/ssl/self-signed.crt
-      #- INFLUXD_TLS_MIN_VERSION=1.2
-      #- INFLUXDB_HTTP_HTTPS_ENABLED=true
-      #- INFLUXDB_HTTP_HTTPS_CERTIFICATE=/etc/ssl/192.168.1.22.crt
-      #- INFLUXDB_HTTP_HTTPS_PRIVATE_KEY=/etc/ssl/192.168.1.22.key
-      #- INFLUXDB_HTTP_AUTH_ENABLED=true
-      #- https-insecure-tls=true
-    #command: ["/bin/sh -c 'sudo chmod -R 755 /etc/ssl/'"]
     volumes:
       - config:/etc/influxdb2
       - data:/var/lib/influxdb2
-      - ./ssl:/etc/ssl/
+      - /data/intelSSL/influxdb:/etc/ssl/
     ports:
       - "58100:8086"
 volumes:

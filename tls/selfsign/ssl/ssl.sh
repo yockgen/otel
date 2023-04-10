@@ -1,9 +1,15 @@
 #! /bin/bash
 
-read -p 'IP Address: ' DOMAIN
-read -p 'Country: ' COUNTRY
-read -p 'State: ' STATE
-echo
+if [ "$#" -ne 1 ]
+then
+  echo "Error: No domain name argument provided"
+  echo "Usage: Provide a domain name as an argument"
+  exit 1
+fi
+
+DOMAIN=$1
+COUNTRY="MY"
+STATE="PG"
 
 # Create root CA & Private key
 
@@ -12,7 +18,7 @@ openssl req -x509 \
             -nodes \
             -newkey rsa:2048 \
             -subj "/CN=${DOMAIN}/C=${COUNTRY}/L=${STATE}" \
-            -keyout rootCA.key -out rootCA.crt 
+            -keyout rootCA.key -out rootCA.crt
 
 # Generate Private key 
 
@@ -73,3 +79,23 @@ openssl x509 -req \
     -CAcreateserial -out self-signed.crt \
     -days 365 \
     -sha256 -extfile cert.conf
+
+rm -r /data/intelSSL
+mkdir /data/intelSSL
+mkdir /data/intelSSL/grafana
+mkdir /data/intelSSL/influxdb
+mkdir /data/intelSSL/otel
+mkdir /data/intelSSL/otel/loadbalancerserver
+mkdir /data/intelSSL/otel/influxdbserver
+
+cp self-signed.crt self-signed.key /data/intelSSL/influxdb
+cp self-signed.crt self-signed.key /data/intelSSL/otel
+cp self-signed.crt self-signed.key /data/intelSSL/grafana
+
+chown -R 1000:1000 /data/intelSSL/grafana
+chown -R 1000:1000 /data/intelSSL/influxdb
+chown -R 1000:1000 /data/intelSSL/otel
+
+
+
+

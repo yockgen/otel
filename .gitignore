@@ -1,0 +1,7 @@
+tls/selfsign/ssl/cert.conf
+tls/selfsign/ssl/csr.conf
+tls/selfsign/ssl/rootCA.crt
+tls/selfsign/ssl/rootCA.key
+tls/selfsign/ssl/self-signed.crt
+tls/selfsign/ssl/self-signed.csr
+tls/selfsign/ssl/self-signed.key

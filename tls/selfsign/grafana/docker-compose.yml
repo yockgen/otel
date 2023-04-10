@@ -9,7 +9,7 @@ services:
       - GF_SERVER_PROTOCOL=https
     volumes:
       - grafana-storage:/var/lib/grafana
-      - ./ssl:/etc/ssl/
+      - /data/intelSSL/grafana:/etc/ssl/
     ports:
       - "59500:3000"
 volumes:

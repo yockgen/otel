@@ -2,10 +2,10 @@ version: "3.9"
 services:
   opentelemetry-collector-contrib:
     image: "otel/opentelemetry-collector-contrib:0.71.0"
-    command: ["--config=/etc/otel-collector-config.yml"]
     user: 1000:1000
+    command: ["--config=/etc/otel-collector-config.yml"]
     volumes:
       - ${CONFIG}:/etc/otel-collector-config.yml
-      - ./ssl:/etc/ssl
+      - /data/intelSSL/otel:/etc/ssl
     ports:
       - "52199:4317"
