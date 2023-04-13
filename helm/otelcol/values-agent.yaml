@@ -8,6 +8,8 @@ otelport: 4317
 
 replicaCount: 1
 
+configName: agent-config
+
 image:
   repository: otel/opentelemetry-collector-contrib
   pullPolicy: IfNotPresent
