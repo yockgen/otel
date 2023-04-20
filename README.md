@@ -78,6 +78,5 @@ http://{ip address of Grafana's host}:32601/
 http://{ip address of Grafana's host}:59500/
 ```
 
-
-Ensure browser's host is on reachable network to Telemetry Infrastructure host IP.   
+Ensure browser's host is on reachable network to Telemetry Infrastructure host IP address. 
 
