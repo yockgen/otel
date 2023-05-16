@@ -219,7 +219,6 @@ service:
 
 4. Observing output in Otel:
 ```
-root@kbl01:/data/otel/docker/otel# otelcol-contrib --config=file:./config-edge-agent.yaml
 2023-05-16T14:08:19.902+0800    info    service/telemetry.go:90 Setting up own telemetry...
 2023-05-16T14:08:19.903+0800    info    service/telemetry.go:116        Serving Prometheus metrics      {"address": ":8888", "level": "Basic"}
 2023-05-16T14:08:19.903+0800    info    exporter/exporter.go:290        Development component. May change in the future.        {"kind": "exporter", "data_type": "logs", "name": "logging"}
@@ -290,4 +289,13 @@ SeverityText:
 SeverityNumber: Unspecified(0)
 Body: Map({"log":"May 16 13:47:15 KBL02 kubelet[24095]: I0516 13:47:15.916172   24095 flags.go:64] FLAG: --topology-manager-policy=\"none\""})
 
+```
+
+5. Retrive log in Grafana, it stored as "logs" in measurement list, example query as below:
+```
+from(bucket: "intel")
+  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+  |> filter(fn: (r) =>
+    r._measurement == "logs"
+  )
 ```
