@@ -1,4 +1,4 @@
-### File configuration
+### Open Telemetry Filelog configuration
 
 1. docker-compose
 ```
