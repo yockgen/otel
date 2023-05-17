@@ -144,8 +144,9 @@ receivers:
   otlp:
     protocols:
       grpc:
+        endpoint: 0.0.0.0:4317
       http:
-        endpoint: 0.0.0.0:8087
+        endpoint: 0.0.0.0:4318
 processors:
   batch:
 exporters:
@@ -192,9 +193,8 @@ service:
     
 
 [INPUT]
-    name tail
-    path /var/log/syslog    
-    tag yockgen.test02
+    name kmsg
+    Tag kernel
 
 [OUTPUT]
     name opentelemetry
@@ -217,7 +217,12 @@ service:
  /opt/fluent-bit/bin/fluent-bit -c fluent-bit.conf
 ```
 
-4. Observing output in Otel:
+4. Sending some customized message to kernel log since above steps is monitoring kernel log:
+```
+echo 'yockgen: testing kernel message' > /dev/kmsg
+```
+
+5. Observing output in Otel:
 ```
 2023-05-16T14:08:19.902+0800    info    service/telemetry.go:90 Setting up own telemetry...
 2023-05-16T14:08:19.903+0800    info    service/telemetry.go:116        Serving Prometheus metrics      {"address": ":8888", "level": "Basic"}
@@ -291,7 +296,7 @@ Body: Map({"log":"May 16 13:47:15 KBL02 kubelet[24095]: I0516 13:47:15.916172   
 
 ```
 
-5. Retrive log in Grafana, it stored as "logs" in measurement list, example query as below:
+6. Retrive log in Grafana, it stored as "logs" in measurement list, example query as below:
 ```
 from(bucket: "intel")
   |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
@@ -299,3 +304,4 @@ from(bucket: "intel")
     r._measurement == "logs"
   )
 ```
+
