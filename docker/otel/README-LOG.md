@@ -138,7 +138,6 @@ opentelemetry-collector-contrib_1  |    {"kind": "exporter", "data_type": "logs"
 ```
 
 ## Fluent-bit configuration
-### Important note: otel->otel always gRPC (port: 4317 by default) regardless forwarding message type (log/metric)
 
 1. Run Opentelemetry Collector with below config:
 ```
@@ -306,4 +305,43 @@ from(bucket: "intel")
     r._measurement == "logs"
   )
 ```
+### Important note: if you're using otel->otel forwarding is always gRPC (port: 4317 by default) regardless source message type (log/metric)
+Example of otel-agent config (pay attention on exporter is using port 4317):
+```
+receivers:
+  #fluentforward:
+    #endpoint: 0.0.0.0:8087
 
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  batch:
+
+exporters:
+  logging:
+    verbosity: detailed
+    sampling_initial: 5
+    sampling_thereafter: 200
+
+ otlp/1:
+    endpoint: http://192.168.1.107:4317
+    tls:
+      insecure: true
+
+service:
+  pipelines:
+    logs:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [otlp/1,logging] 
+
+    metrics:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [otlp/1,logging]
+```
