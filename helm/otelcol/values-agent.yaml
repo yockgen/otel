@@ -8,8 +8,6 @@ otelport: 4317
 
 replicaCount: 1
 
-configName: agent-config
-
 image:
   repository: otel/opentelemetry-collector-contrib
   pullPolicy: IfNotPresent
@@ -56,6 +54,21 @@ serviceNodePort:
   targetPort: 4317
   protocol: TCP
   name: otelcol-agent-nodeport
+
+serviceLog:
+  type: ClusterIP
+  port: 55201
+  targetPort: 4318
+  protocol: TCP
+  name: otelcol-gateway-log
+
+serviceLogNodePort:
+  type: NodePort
+  nodePort: 30696
+  port: 55200
+  targetPort: 4318
+  protocol: TCP
+  name: otelcol-gateway-nodeport-log
 
 ingress:
   enabled: false
