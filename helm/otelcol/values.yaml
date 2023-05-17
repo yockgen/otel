@@ -57,6 +57,21 @@ serviceNodePort:
   protocol: TCP
   name: otelcol-gateway-nodeport
 
+serviceLog:
+  type: ClusterIP
+  port: 54201
+  targetPort: 4318
+  protocol: TCP
+  name: otelcol-gateway-log
+
+serviceLogNodePort:
+  type: NodePort
+  nodePort: 31083
+  port: 54202
+  targetPort: 4318
+  protocol: TCP
+  name: otelcol-gateway-nodeport-log
+
 ingress:
   enabled: false
   className: ""

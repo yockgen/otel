@@ -30,3 +30,36 @@ spec:
       name: {{ .Values.serviceNodePort.name }}
   selector:
     {{- include "otelcol.selectorLabels" . | nindent 4 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.serviceLog.name  }}
+  labels:
+    {{- include "otelcol.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.serviceLog.type }}
+  ports:
+    - port: {{ .Values.serviceLog.port }}
+      targetPort: {{ .Values.serviceLog.targetPort }}
+      protocol: {{ .Values.serviceLog.protocol }}
+      name: {{ .Values.serviceLog.name }}
+  selector:
+    {{- include "otelcol.selectorLabels" . | nindent 4 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.serviceLogNodePort.name }}
+  labels:
+    {{- include "otelcol.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.serviceLogNodePort.type }}
+  ports:
+    - nodePort: {{ .Values.serviceLogNodePort.nodePort }}
+      port: {{ .Values.serviceLogNodePort.port }}
+      targetPort: {{ .Values.serviceLogNodePort.targetPort }}
+      protocol: {{ .Values.serviceLogNodePort.protocol }}
+      name: {{ .Values.serviceLogNodePort.name }}
+  selector:
+    {{- include "otelcol.selectorLabels" . | nindent 4 }}
