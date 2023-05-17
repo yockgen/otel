@@ -138,6 +138,8 @@ opentelemetry-collector-contrib_1  |    {"kind": "exporter", "data_type": "logs"
 ```
 
 ## Fluent-bit configuration
+### Important note: otel->otel always gRPC (port: 4317 by default) regardless forwarding message type (log/metric)
+
 1. Run Opentelemetry Collector with below config:
 ```
 receivers:  
