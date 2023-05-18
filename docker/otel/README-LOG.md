@@ -345,3 +345,65 @@ service:
       processors: [batch]
       exporters: [otlp/1,logging]
 ```
+
+## Fluent-Bit configuration
+
+Fluent-bit config:
+```
+[SERVICE]
+....
+[INPUT]        
+    name kmsg
+    Tag kernel
+    host 192.168.1.2
+    
+[INPUT]
+    name tail    
+    path /data/fluentbit/test.data
+    tag yockgenlog
+    
+[FILTER]
+    Name Lua
+    Match *
+    script add_tag.lua
+    call append_tag
+    #code function append_tag(tag, timestamp, record) new_record = record new_record["host"] = "192.168.1.102".."@"..tag return 1, timestamp, new_record end
+
+[OUTPUT]
+    name opentelemetry
+    match *
+    #docker otel agent - work
+    #host 192.168.1.161
+    #port 52200
+
+    #otel agent natively - work
+    #host 192.168.1.161
+    #port 4318
+
+    #helm otel agent - work
+    host 192.168.1.161
+    port 30696
+
+    #helm otel gateway - work
+    #host 192.168.1.107
+    #port 31083
+
+    tls Off
+    tls.verify Off
+    add_label app yockgen-hello
+    add_label app fluent-bit-yockgen
+    add_label hostname 192.168.1.1
+
+```
+
+add_tag.lua (you could put the code inline also):
+```
+function append_tag(tag, timestamp, record)
+        local host = os.getenv("HOST")
+        new_record = record
+        new_record["host"] = "YOCKGENHOST"
+        new_record["tag"] = tag
+        return 1, timestamp, new_record
+end
+
+```
