@@ -407,3 +407,13 @@ function append_tag(tag, timestamp, record)
 end
 
 ```
+
+alternative solution (however, one input need to associated with one filter):
+```
+...
+[FILTER]
+    Name record_modifier
+    Match kernel
+    Record hostname testing
+    Record logtype kernel
+```
